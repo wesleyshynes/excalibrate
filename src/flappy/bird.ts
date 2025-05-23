@@ -4,8 +4,14 @@ import { Ground } from "./ground";
 import { Pipe } from "./pipe";
 import { Config } from "./config";
 import { Level } from "./level";
+import { Resources } from "./resources";
 
 export class Bird extends ex.Actor {
+
+    upAnimation!: ex.Animation;
+    downAnimation!: ex.Animation;
+
+    startSprite!: ex.Sprite;
 
     jumping = false;
     playing = false;
@@ -21,6 +27,41 @@ export class Bird extends ex.Actor {
     }
 
     override onInitialize(): void {
+        // Slice up image into a sprite sheet
+        const spriteSheet = ex.SpriteSheet.fromImageSource({
+            image: Resources.BirdImage,
+            grid: {
+                rows: 1,
+                columns: 4,
+                spriteWidth: 32,
+                spriteHeight: 32,
+            }
+        });
+
+        this.startSprite = spriteSheet.getSprite(1, 0);
+        this.graphics.add('start', this.startSprite);
+        this.graphics.use('start');
+
+        // Animation to play going up on tap
+        this.upAnimation = ex.Animation.fromSpriteSheet(
+            spriteSheet,
+            [2, 1, 0], // 3rd frame, then 2nd, then first
+            150, // 150ms for each frame
+            ex.AnimationStrategy.Freeze);
+        // Animation to play going down
+        this.downAnimation = ex.Animation.fromSpriteSheet(
+            spriteSheet,
+            [0, 1, 2],
+            150,
+            ex.AnimationStrategy.Freeze);
+        // Register animations by name
+        this.graphics.add('down', this.downAnimation);
+        this.graphics.add('up', this.upAnimation);
+
+        this.on('exitviewport', () => {
+            this.level.triggerGameOver();
+        });
+
         this.acc = ex.vec(0, Config.BirdAcceleration); // pixels per second per second
     }
 
@@ -54,10 +95,12 @@ export class Bird extends ex.Actor {
 
     override onPostUpdate(engine: ex.Engine): void {
         if (!this.playing) return;
-        
+
         if (!this.jumping && this.isInputActive(engine)) {
             this.vel.y += Config.BirdJumpVelocity; // negative is UP
             this.jumping = true;
+            // play sound effect
+            Resources.FlapSound.play();
         }
         if (!this.isInputActive(engine)) {
             this.jumping = false;
