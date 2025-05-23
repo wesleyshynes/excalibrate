@@ -47,12 +47,14 @@ export class Bird extends ex.Actor {
             spriteSheet,
             [2, 1, 0], // 3rd frame, then 2nd, then first
             150, // 150ms for each frame
+            // ex.AnimationStrategy.Loop);
             ex.AnimationStrategy.Freeze);
         // Animation to play going down
         this.downAnimation = ex.Animation.fromSpriteSheet(
             spriteSheet,
             [0, 1, 2],
             150,
+            // ex.AnimationStrategy.Loop);
             ex.AnimationStrategy.Freeze);
         // Register animations by name
         this.graphics.add('down', this.downAnimation);
@@ -99,6 +101,10 @@ export class Bird extends ex.Actor {
         if (!this.jumping && this.isInputActive(engine)) {
             this.vel.y += Config.BirdJumpVelocity; // negative is UP
             this.jumping = true;
+            this.graphics.use('up');
+            // rewind
+            this.upAnimation.reset();
+            this.downAnimation.reset();
             // play sound effect
             Resources.FlapSound.play();
         }
@@ -107,6 +113,11 @@ export class Bird extends ex.Actor {
         }
         // keep velocity from getting too big
         this.vel.y = ex.clamp(this.vel.y, Config.BirdMinVelocity, Config.BirdMaxVelocity);
+
+        if (this.vel.y > 0) {
+            this.graphics.use('down');
+        }
+
         // The "speed" the bird will move relative to pipes
         this.rotation = ex.vec(200, this.vel.y).toAngle();
     }
