@@ -22,10 +22,18 @@ const game = new ex.Engine({
   pixelArt: true,
   pixelRatio: 2,
   displayMode: ex.DisplayMode.FitScreen,
-  scenes: { Level: Level }
+  scenes: { 
+    Level: Level
+  }
 });
 
 const loader = new ex.Loader(Object.values(Resources));
+loader.playButtonText = 'Click to Play';
+loader.logo = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAWtJREFUWEfdl9ERwyAIhnWBTpZx7QIdqQukh1c8RBAwNg/tU5tY/g8UhJzWPufkbzliMrJ4JqppmvbNBSmlFWEOpOpYAKL4+e7t54cr6KIWPOQiuLB7zkVR0ineln+/NNsaQFugCS8CtFCBXYCXALpFWnCfr9K9Oo7DtQ+wiDqlAlieU4CI+ABQSjm5AUt8R/jBBjiRAQB+UIhfAqBtjOB2gG5/hfQUAawtoKnmFYCoSik6AEiVziMiHUJp6zjENgDJwwgArUxDufVEYAeAWog8ALP9pRVJ2wJ0wKz7mtBtADzUGB3tEvJEjxayIQKeIjS7B24B0HLccxtxwKUIXAGglxFmQX2G9J4t+BuA6ghvkfh9Tb1d7AWHo2E2JDMheHelG1rqiCK3YTgTZn2/50AGu+Kh35w2pdJ54B4uAFTNVlG9k8/GuaCmvAfA1TEHItAyDmcCTENp/KJj1O7ZkNrLUh3Q5sUVEGv2TB+ttdz9PrN49gAAAABJRU5ErkJggg==`;
+loader.logoWidth = 32;
+loader.logoHeight = 32;
+loader.backgroundColor = '#333';
+
 game.start(loader).then(() => {
   game.goToScene('Level');
   positionUI(game);
