@@ -1,4 +1,4 @@
-import { Actor, clamp, Color, Engine, Keys, vec } from "excalibur";
+import { Actor, CollisionType, Color, Engine, Keys, vec } from "excalibur";
 
 export class Player extends Actor {
     constructor() {
@@ -6,7 +6,8 @@ export class Player extends Actor {
             pos: vec(100, 100), // Starting position of the player
             width: 64,
             height: 64,
-            color: Color.Yellow
+            color: Color.Yellow,
+            collisionType: CollisionType.Active
         });
     }
 
@@ -51,7 +52,7 @@ export class Player extends Actor {
             moveX = true;
         }
 
-        let maxVelocity = 100;
+        let maxVelocity = 200;
         // const maxSpeed = Math.sqrt(this.vel.x * this.vel.x + this.vel.y * this.vel.y);
 
         const absoluteVelocity = Math.sqrt(this.vel.x * this.vel.x + this.vel.y * this.vel.y);
