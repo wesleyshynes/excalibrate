@@ -2,6 +2,7 @@
 // https://github.com/excaliburjs/sample-excalibird/tree/main/src
 import { Color, DisplayMode, Engine, Loader } from 'excalibur';
 import { Level } from './level';
+import { Level2 } from './level2';
 
 // import { Resources } from './resources';
 // import { initMuteButton } from './ui';
@@ -24,7 +25,8 @@ const game = new Engine({
   pixelRatio: 2,
   displayMode: DisplayMode.FitScreen,
   scenes: { 
-    Level: Level
+    Level: Level,
+    Level2: Level2
   }
 });
 

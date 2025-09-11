@@ -1,5 +1,6 @@
 import { Actor, Collider, CollisionContact, CollisionType, Color, Engine, Keys, Side, vec } from "excalibur";
 import { Enemy } from "./enemy";
+import { Door } from "./door";
 
 export class Player extends Actor {
 
@@ -17,7 +18,9 @@ export class Player extends Actor {
     }
 
     onInitialize(): void {
-        // Initialize player specific properties or animations here   
+        // Initialize player specific properties or animations here  
+        console.log(this)
+        
     }
 
     onCollisionStart(self: Collider, other: Collider, side: Side, contact: CollisionContact): void {
