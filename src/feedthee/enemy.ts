@@ -2,6 +2,8 @@ import { Actor, Collider, CollisionContact, CollisionType, Color, Engine, Side, 
 import { Player } from "./player";
 
 export class Enemy extends Actor {
+    engineRef: Engine | undefined;
+
     constructor(name: string = 'enemy') {
         super({
             pos: vec(300, 200), // Starting position of the enemy
@@ -13,8 +15,9 @@ export class Enemy extends Actor {
         });
     }
 
-    onInitialize(): void {
+    onInitialize(engine: Engine): void {
         // Initialize enemy specific properties or animations here
+        this.engineRef = engine;
     }
 
     onCollisionStart(self: Collider, other: Collider, side: Side, contact: CollisionContact): void {
@@ -25,7 +28,18 @@ export class Enemy extends Actor {
             console.log(contact.normal)
             // this.vel.x += contact.normal.x * 500;
             // this.vel.y += contact.normal.y * 500;
+            this.body.collisionType = CollisionType.PreventCollision
+            // set a timer for 3 seconds and remove from game
+            this.scheduleRemove();
         }
+    }
+
+    scheduleRemove() {
+        console.log('Scheduling enemy removal in 3 seconds');
+        this.engineRef?.clock.schedule(() => {
+            console.log('Enemy removed after collision with player');
+            this.kill();
+        }, 3000);
     }
 
     setVelocity(x: number, y: number) {

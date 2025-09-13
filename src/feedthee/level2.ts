@@ -32,6 +32,9 @@ export class Level2 extends Scene {
 
     onActivate(context: SceneActivationContext<any>): void {
         // Reset player position when the level is activated
-        this.player.pos = vec(gameWidth - 100, gameHeight / 2);
+        this.player.vel = vec(0,0);
+        this.player.pos = vec(
+            this.exitDoor.pos.x + 60,
+            gameHeight / 2);
     }
 }

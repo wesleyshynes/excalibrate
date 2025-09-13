@@ -11,6 +11,9 @@ export class Level extends Scene {
 
     player = new Player('player1')
 
+    startingX = 100;
+    firstActivation: boolean = false;
+
     walls = [
         new Wall(gameWidth / 2, 10, gameWidth, 20, Color.Cyan),    // Top wall
         new Wall(gameWidth / 2, gameHeight - 10, gameWidth, 20, Color.Cyan), // Bottom wall
@@ -28,10 +31,16 @@ export class Level extends Scene {
         this.add(this.enemy);
         this.add(this.exitDoor);
         this.exitDoor.engineRef = engine;
+
     }
 
     onActivate(context: SceneActivationContext<any>): void {
         // Reset player position when the level is activated
-        this.player.pos = vec(100, gameHeight / 2);
+        this.player.vel = vec(0,0);
+        this.player.pos = vec(
+            this.firstActivation ? this.exitDoor.pos.x - 60 : this.startingX, 
+            gameHeight / 2
+        );
+        this.firstActivation = true;
     }
 }
