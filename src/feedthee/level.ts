@@ -3,6 +3,7 @@ import { Player } from "./player";
 import { Wall } from "./wall";
 import { Enemy } from "./enemy";
 import { Door } from "./door";
+import { PickUp } from "./pickup";
 
 const gameWidth = 800;
 const gameHeight = 600;
@@ -23,6 +24,10 @@ export class Level extends Scene {
 
     enemy = new Enemy('enemy1')
 
+    pickup = new PickUp('pickup1', {
+        pos: { x: gameWidth / 2, y: gameHeight / 2 },
+    })
+
     exitDoor = new Door(gameWidth - 50, gameHeight / 2, 40, 80, Color.Black, 'Level2')
 
     onInitialize(engine: Engine): void {
@@ -30,6 +35,7 @@ export class Level extends Scene {
         this.add(this.player);
         this.add(this.enemy);
         this.add(this.exitDoor);
+        this.add(this.pickup);
         this.exitDoor.engineRef = engine;
 
     }

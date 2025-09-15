@@ -1,48 +1,43 @@
 import { Actor, Collider, CollisionContact, CollisionType, Color, Engine, Side, vec } from "excalibur";
 import { Player } from "./player";
 
-export class Enemy extends Actor {
+export class PickUp extends Actor {
     engineRef: Engine | undefined;
 
-    constructor(name: string = 'enemy', options?: {
+    constructor(name: string = 'pickup', options?: {
         pos?: { x: number, y: number },
-        width?: number,
-        height?: number,
+        radius?: number,
         color?: Color
     }) {
         super({
-            pos: vec(options?.pos?.x || 300, options?.pos?.y || 200), // Starting position of the enemy
-            width: options?.width || 32,
-            height: options?.height || 32,
-            color: options?.color || Color.Red,
-            collisionType: CollisionType.Active,
+            pos: vec(options?.pos?.x || 300, options?.pos?.y || 200), // Starting position of the pickup
+            radius: options?.radius || 16,
+            color: options?.color || Color.Orange,
+            collisionType: CollisionType.Passive,
             name: name
         });
     }
 
     onInitialize(engine: Engine): void {
-        // Initialize enemy specific properties or animations here
+        // Initialize pickup specific properties or animations here
         this.engineRef = engine;
     }
 
     onCollisionStart(self: Collider, other: Collider, side: Side, contact: CollisionContact): void {
         // Handle collision start events here
-        if (self.owner instanceof Enemy && other.owner instanceof Player) {
-            const playerLastSpeed = (other.owner as Player).lastSpeed;
-            self.owner.setVelocity(playerLastSpeed.x, playerLastSpeed.y);
+        if (self.owner instanceof PickUp && other.owner instanceof Player) {
             if (other.owner.updatePlayerLabel) {
-                other.owner.updatePlayerLabel('Ouch!');
+                other.owner.updatePlayerLabel('Picked Up!');
             }
+            self.owner.setVelocity(0, -1200);
+            this.scheduleRemove();
         }
-
     }
 
     scheduleRemove() {
-        this.body.collisionType = CollisionType.PreventCollision
         this.engineRef?.clock.schedule(() => {
-            console.log('Enemy removed after collision with player');
             this.kill();
-        }, 3000);
+        }, 60);
     }
 
     setVelocity(x: number, y: number) {
@@ -51,16 +46,14 @@ export class Enemy extends Actor {
     }
 
     onPostUpdate(engine: Engine) {
-        // Simple AI to move towards the player could be implemented here
-        let maxVelocity = 600;
-        // Limit the maximum velocity
+        let maxVelocity = 1200;
         const absoluteVelocity = Math.sqrt(this.vel.x * this.vel.x + this.vel.y * this.vel.y);
         if (absoluteVelocity > maxVelocity) {
             const scale = maxVelocity / absoluteVelocity;
             this.vel.x *= scale;
             this.vel.y *= scale;
         }
-        // Apply friction to gradually slow down the enemy
+        // Apply friction to gradually slow down the pickup
         this.vel.x *= 0.9;
         this.vel.y *= 0.9;
     }

@@ -1,10 +1,23 @@
-import { Actor, Collider, CollisionContact, CollisionType, Color, Engine, Keys, Side, vec } from "excalibur";
-import { Enemy } from "./enemy";
-import { Door } from "./door";
+import {
+    Actor,
+    Collider,
+    CollisionContact,
+    CollisionType,
+    Color,
+    Engine,
+    Keys,
+    Label,
+    Side,
+    vec,
+} from "excalibur";
 
 export class Player extends Actor {
 
-    lastSpeed = vec(0,0);
+    lastSpeed = vec(0, 0);
+
+    playerLabel: Label | undefined;
+
+    engineRef: Engine | undefined;
 
     constructor(name: string = 'player') {
         super({
@@ -17,24 +30,43 @@ export class Player extends Actor {
         });
     }
 
-    onInitialize(): void {
-        // Initialize player specific properties or animations here  
+    onInitialize(engine: Engine): void {
+        // Initialize player specific properties or animations here
+        this.engineRef = engine;
         console.log(this)
-        
+
+        const playerLabel = new Label({
+            text: 'Player',
+            pos: vec(0, -45),
+            color: Color.Black,
+            // size: 14,
+            // fontFamily: 'Arial',
+            z: 1
+        });
+        this.playerLabel = playerLabel;
+        this.updatePlayerLabel('Player');
+        this.addChild(playerLabel);
+    }
+
+    updatePlayerLabel(text: string) {
+        if (this.playerLabel) {
+            this.playerLabel.text = text;
+            const playerLabelWidth = this.playerLabel.getTextWidth();
+            this.playerLabel.pos.x = - playerLabelWidth / 2;
+
+            // Remove the label text after a short time
+            this.engineRef?.clock.schedule(() => {
+                if (this.playerLabel) {
+                    this.playerLabel.text = 'Player';
+                    const playerLabelWidth = this.playerLabel.getTextWidth();
+                    this.playerLabel.pos.x = - playerLabelWidth / 2;
+                }
+            }, 300);
+        }
     }
 
     onCollisionStart(self: Collider, other: Collider, side: Side, contact: CollisionContact): void {
         // Handle collision start events here
-        if (other.owner instanceof Enemy && self.owner instanceof Player) {
-            console.log('Player collided with enemy!');
-            console.log(other.owner.vel);
-            console.log(self.owner.vel);
-            // Simple knockback effect
-            other.owner.setVelocity(this.lastSpeed.x, this.lastSpeed.y);
-
-            // other.owner.body.applyImpulse(contact.colliderB.center, vec(this.lastSpeed.x * 2, this.lastSpeed.y * 2));
-
-        }
     }
 
     onCollisionEnd(self: Collider, other: Collider, side: Side, contact: CollisionContact): void {
@@ -88,8 +120,8 @@ export class Player extends Actor {
             this.vel.y *= scale; // Scale down the velocity to maxVelocity
         }
 
-        // this.vel.x = clamp(this.vel.x, -100, 100); // Limit horizontal speed
-        // this.vel.y = clamp(this.vel.y, -100, 100); // Limit vertical speed
+        // this.vel.x = clamp(this.vel.x, -400, 400); // Limit horizontal speed
+        // this.vel.y = clamp(this.vel.y, -400, 400); // Limit vertical speed
 
         if (moveY === false) {
             this.vel.y *= 0.9; // Stop moving if no button is pressed
