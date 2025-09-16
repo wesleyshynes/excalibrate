@@ -3,6 +3,7 @@ import { Player } from "./player";
 import { Wall } from "./wall";
 import { Enemy } from "./enemy";
 import { Door } from "./door";
+import { PlayerHUD } from "./player-hud";
 
 const gameWidth = 800;
 const gameHeight = 600;
@@ -10,6 +11,8 @@ const gameHeight = 600;
 export class Level2 extends Scene {
 
     player = new Player('player1')
+
+    playerHUD = new PlayerHUD();
 
     walls = [
         new Wall(gameWidth / 2, 10, gameWidth, 20),    // Top wall
@@ -20,7 +23,7 @@ export class Level2 extends Scene {
 
     enemy = new Enemy('enemy1')
 
-    exitDoor = new Door(50, gameHeight / 2, 40, 80, Color.Green, 'Level')
+    exitDoor = new Door(50, gameHeight / 2, 40, 80, Color.Black, 'Level')
 
 
     onInitialize(engine: Engine): void {
@@ -28,6 +31,7 @@ export class Level2 extends Scene {
         this.add(this.player);
         this.add(this.enemy);
         this.add(this.exitDoor);
+        this.add(this.playerHUD);
     }
 
     onActivate(context: SceneActivationContext<any>): void {

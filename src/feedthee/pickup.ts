@@ -1,5 +1,6 @@
 import { Actor, Collider, CollisionContact, CollisionType, Color, Engine, Side, vec } from "excalibur";
 import { Player } from "./player";
+import { gameData } from "./game-data";
 
 export class PickUp extends Actor {
     engineRef: Engine | undefined;
@@ -31,6 +32,7 @@ export class PickUp extends Actor {
             }
             self.owner.setVelocity(0, -1200);
             this.scheduleRemove();
+            gameData.updateScore(10);
         }
     }
 

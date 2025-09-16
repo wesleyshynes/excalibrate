@@ -4,6 +4,7 @@ import { Wall } from "./wall";
 import { Enemy } from "./enemy";
 import { Door } from "./door";
 import { PickUp } from "./pickup";
+import { PlayerHUD } from "./player-hud";
 
 const gameWidth = 800;
 const gameHeight = 600;
@@ -11,6 +12,8 @@ const gameHeight = 600;
 export class Level extends Scene {
 
     player = new Player('player1')
+
+    playerHUD = new PlayerHUD();
 
     startingX = 100;
     firstActivation: boolean = false;
@@ -36,7 +39,7 @@ export class Level extends Scene {
         this.add(this.enemy);
         this.add(this.exitDoor);
         this.add(this.pickup);
-        this.exitDoor.engineRef = engine;
+        this.add(this.playerHUD);
 
     }
 

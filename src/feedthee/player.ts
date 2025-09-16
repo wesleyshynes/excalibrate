@@ -5,9 +5,11 @@ import {
     CollisionType,
     Color,
     Engine,
+    Font,
     Keys,
     Label,
     Side,
+    TextAlign,
     vec,
 } from "excalibur";
 
@@ -39,9 +41,13 @@ export class Player extends Actor {
             text: 'Player',
             pos: vec(0, -45),
             color: Color.Black,
-            // size: 14,
-            // fontFamily: 'Arial',
-            z: 1
+            z: 1,
+            font: new Font({
+                size: 10,
+                family: 'Arial',
+                textAlign: TextAlign.Center,
+                color: Color.Black
+            })
         });
         this.playerLabel = playerLabel;
         this.updatePlayerLabel('Player');
@@ -51,15 +57,11 @@ export class Player extends Actor {
     updatePlayerLabel(text: string) {
         if (this.playerLabel) {
             this.playerLabel.text = text;
-            const playerLabelWidth = this.playerLabel.getTextWidth();
-            this.playerLabel.pos.x = - playerLabelWidth / 2;
 
             // Remove the label text after a short time
             this.engineRef?.clock.schedule(() => {
                 if (this.playerLabel) {
                     this.playerLabel.text = 'Player';
-                    const playerLabelWidth = this.playerLabel.getTextWidth();
-                    this.playerLabel.pos.x = - playerLabelWidth / 2;
                 }
             }, 300);
         }

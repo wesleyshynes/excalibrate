@@ -1,5 +1,6 @@
 import { Actor, Collider, CollisionContact, CollisionType, Color, Engine, Side, vec } from "excalibur";
 import { Player } from "./player";
+import { gameData } from "./game-data";
 
 export class Enemy extends Actor {
     engineRef: Engine | undefined;
@@ -32,6 +33,7 @@ export class Enemy extends Actor {
             self.owner.setVelocity(playerLastSpeed.x, playerLastSpeed.y);
             if (other.owner.updatePlayerLabel) {
                 other.owner.updatePlayerLabel('Ouch!');
+                gameData.updateHealth(-10);
             }
         }
 

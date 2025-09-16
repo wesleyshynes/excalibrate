@@ -27,7 +27,7 @@ const game = new Engine({
   scenes: { 
     Level: Level,
     Level2: Level2
-  }
+  },
 });
 
 const loader = new Loader();
