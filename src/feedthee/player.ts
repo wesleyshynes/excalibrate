@@ -1,5 +1,6 @@
 import {
     Actor,
+    Animation,
     Collider,
     CollisionContact,
     CollisionType,
@@ -9,9 +10,12 @@ import {
     Keys,
     Label,
     Side,
+    Sprite,
+    SpriteSheet,
     TextAlign,
     vec,
 } from "excalibur";
+import { Resources } from "./resources";
 
 export class Player extends Actor {
 
@@ -21,11 +25,19 @@ export class Player extends Actor {
 
     engineRef: Engine | undefined;
 
+    // idleSprite!: Sprite;
+    // walkSprite!: Sprite;
+    // runSprite!: Sprite;
+
+    // idleAnimation!: Animation;
+    // walkAnimation!: Animation
+    // runAnimation!: Animation
+
     constructor(name: string = 'player') {
         super({
             pos: vec(100, 100), // Starting position of the player
-            width: 64,
-            height: 64,
+            width: 16,
+            height: 16,
             color: Color.Yellow,
             collisionType: CollisionType.Active,
             name: name
@@ -39,7 +51,7 @@ export class Player extends Actor {
 
         const playerLabel = new Label({
             text: 'Player',
-            pos: vec(0, -45),
+            pos: vec(0, -20),
             color: Color.Black,
             z: 1,
             font: new Font({
@@ -52,6 +64,57 @@ export class Player extends Actor {
         this.playerLabel = playerLabel;
         this.updatePlayerLabel('Player');
         this.addChild(playerLabel);
+
+        const idleSpriteSheet = SpriteSheet.fromImageSource({
+            image: Resources.PlayerIdle,
+            grid: {
+                rows: 5,
+                columns: 4,
+                spriteWidth: 16,
+                spriteHeight: 16,
+            },
+
+        });
+        const animationSpeed = 60
+
+        const idleAnimationDown = Animation.fromSpriteSheet(
+            idleSpriteSheet,
+            [0, 1, 2, 3], // All frames in order
+            animationSpeed // Frame duration in milliseconds
+        );
+        this.graphics.add('idle-down', idleAnimationDown);
+        this.graphics.use('idle-down');
+
+        const idleAnimationRightDown = Animation.fromSpriteSheet(
+            idleSpriteSheet,
+            [4, 5, 6, 7], // All frames in order
+            animationSpeed // Frame duration in milliseconds
+        );
+        this.graphics.add('idle-right-down', idleAnimationRightDown);
+
+        const idleAnimationRight = Animation.fromSpriteSheet(
+            idleSpriteSheet,
+            [8, 9, 10, 11], // All frames in order
+            animationSpeed // Frame duration in milliseconds
+        );
+        this.graphics.add('idle-right', idleAnimationRight);
+
+        const idleAnimationRightUp = Animation.fromSpriteSheet(
+            idleSpriteSheet,
+            [12, 13, 14, 15], // All frames in order
+            animationSpeed // Frame duration in milliseconds
+        );
+        this.graphics.add('idle-right-up', idleAnimationRightUp);
+
+        const idleAnimationUp = Animation.fromSpriteSheet(
+            idleSpriteSheet,
+            [16, 17, 18, 19], // All frames in order
+            animationSpeed // Frame duration in milliseconds
+        );
+        this.graphics.add('idle-up', idleAnimationUp);
+
+
+
     }
 
     updatePlayerLabel(text: string) {
@@ -86,6 +149,7 @@ export class Player extends Actor {
         ) {
             this.vel.y += -10; // Move up
             moveY = true;
+            this.graphics.use('idle-up');
         }
 
         if (
@@ -94,6 +158,7 @@ export class Player extends Actor {
         ) {
             this.vel.y += 10; // Move down
             moveY = true;
+            this.graphics.use('idle-down');
         }
 
         if (
@@ -102,6 +167,8 @@ export class Player extends Actor {
         ) {
             this.vel.x += -10; // Move left
             moveX = true;
+            this.graphics.use('idle-right');
+            this.graphics.flipHorizontal = false;
         }
 
         if (
@@ -110,6 +177,8 @@ export class Player extends Actor {
         ) {
             this.vel.x += 10; // Move right
             moveX = true;
+            this.graphics.use('idle-right');
+            this.graphics.flipHorizontal = true;
         }
 
         let maxVelocity = 400;
