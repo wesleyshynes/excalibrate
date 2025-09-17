@@ -1,9 +1,26 @@
-import { Actor, Collider, CollisionContact, CollisionType, Color, Engine, Side, vec } from "excalibur";
+import {
+    Actor,
+    Animation,
+    AnimationStrategy,
+    Collider,
+    CollisionContact,
+    CollisionType,
+    Color,
+    Engine,
+    Side,
+    Sprite,
+    SpriteSheet,
+    vec
+} from "excalibur";
 import { Player } from "./player";
 import { gameData } from "./game-data";
+import { Resources } from "./resources";
 
 export class PickUp extends Actor {
     engineRef: Engine | undefined;
+
+    startSprite!: Sprite;
+    spinAnimation!: Animation;
 
     constructor(name: string = 'pickup', options?: {
         pos?: { x: number, y: number },
@@ -22,6 +39,31 @@ export class PickUp extends Actor {
     onInitialize(engine: Engine): void {
         // Initialize pickup specific properties or animations here
         this.engineRef = engine;
+
+        const spriteSheet = SpriteSheet.fromImageSource({
+            image: Resources.CoinImage,
+            grid: {
+                rows: 1,
+                columns: 8,
+                spriteWidth: 32,
+                spriteHeight: 32,
+            }
+        });
+
+        this.startSprite = spriteSheet.getSprite(1, 0);
+        this.graphics.add('start', this.startSprite);
+        this.graphics.use('start');
+
+        // Animation to play going up on tap
+        this.spinAnimation = Animation.fromSpriteSheet(
+            spriteSheet,
+            [0, 1, 2, 3, 4, 5, 6, 7], // 3rd frame, then 2nd, then first
+            60, // ms for each frame
+            // ex.AnimationStrategy.Loop);
+            AnimationStrategy.Loop
+        );
+        this.graphics.add('spin', this.spinAnimation);
+        this.graphics.use('spin');
     }
 
     onCollisionStart(self: Collider, other: Collider, side: Side, contact: CollisionContact): void {

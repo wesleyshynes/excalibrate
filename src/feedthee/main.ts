@@ -3,6 +3,7 @@
 import { Color, DisplayMode, Engine, Loader } from 'excalibur';
 import { Level } from './level';
 import { Level2 } from './level2';
+import { Resources } from './resources';
 
 // import { Resources } from './resources';
 // import { initMuteButton } from './ui';
@@ -30,8 +31,8 @@ const game = new Engine({
   },
 });
 
-const loader = new Loader();
-// const loader = new ex.Loader(Object.values(Resources));
+// const loader = new Loader();
+const loader = new Loader(Object.values(Resources));
 loader.playButtonText = 'Click to Play';
 loader.logo = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAWtJREFUWEfdl9ERwyAIhnWBTpZx7QIdqQukh1c8RBAwNg/tU5tY/g8UhJzWPufkbzliMrJ4JqppmvbNBSmlFWEOpOpYAKL4+e7t54cr6KIWPOQiuLB7zkVR0ineln+/NNsaQFugCS8CtFCBXYCXALpFWnCfr9K9Oo7DtQ+wiDqlAlieU4CI+ABQSjm5AUt8R/jBBjiRAQB+UIhfAqBtjOB2gG5/hfQUAawtoKnmFYCoSik6AEiVziMiHUJp6zjENgDJwwgArUxDufVEYAeAWog8ALP9pRVJ2wJ0wKz7mtBtADzUGB3tEvJEjxayIQKeIjS7B24B0HLccxtxwKUIXAGglxFmQX2G9J4t+BuA6ghvkfh9Tb1d7AWHo2E2JDMheHelG1rqiCK3YTgTZn2/50AGu+Kh35w2pdJ54B4uAFTNVlG9k8/GuaCmvAfA1TEHItAyDmcCTENp/KJj1O7ZkNrLUh3Q5sUVEGv2TB+ttdz9PrN49gAAAABJRU5ErkJggg==`;
 loader.logoWidth = 32;
