@@ -168,7 +168,10 @@ export class Player extends Actor {
 
         if (this.weapon) {
             if (engine.input.keyboard.wasPressed(Keys.Space)) {
-                this.weapon.attack({ x: this.vel.x, y: this.vel.y });
+                const weaponXDir = xDirection === 'left' ? -1 : (xDirection === 'right' ? 1 : 0);
+                const weaponYDir = yDirection === 'up' ? -1 : (yDirection === 'down' ? 1 : 0);
+                console.log(`Attacking with direction x:${weaponXDir}, y:${weaponYDir}`);
+                this.weapon.attack({ x: weaponXDir, y: weaponYDir });
             }
         }
 

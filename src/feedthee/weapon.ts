@@ -34,9 +34,9 @@ export class Weapon extends Actor {
 
     attack(direction: { x: number, y: number }) {
         console.log(this.initialized ? "Weapon already initialized" : "Weapon not initialized yet",
-             this.weaponActive,
-             this.engineRef ? "Engine reference available" : "No engine reference"
-            );
+            this.weaponActive,
+            this.engineRef ? "Engine reference available" : "No engine reference"
+        );
         if (this.weaponActive) {
             console.log("Weapon is already active, attack ignored");
             return; // Prevent overlapping attacks
@@ -44,6 +44,7 @@ export class Weapon extends Actor {
         this.weaponActive = true;
         // Implement attack logic here
         console.log(`${this._owner.name} attacks in direction: ${JSON.stringify(direction)}`);
+        this.pos = vec(direction.x * 20, direction.y * 20);
         this._owner.addChild(this);
         if (this.initialized && this.engineRef) {
             console.log("Scheduling weapon removal after attack");
