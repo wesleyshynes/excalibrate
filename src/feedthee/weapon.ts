@@ -1,4 +1,13 @@
-import { Actor, CollisionType, Color, Engine, vec } from "excalibur";
+import { Actor, CollisionType, Color, Engine, RotationType, vec } from "excalibur";
+
+
+const rotationMatrix = [
+    [315, 0, 45],
+    [270, 0, 90],
+    [225, 180, 135],
+]
+
+const rotationMatrixRad = rotationMatrix.map(row => row.map(deg => deg * (Math.PI / 180)));
 
 export class Weapon extends Actor {
 
@@ -12,7 +21,7 @@ export class Weapon extends Actor {
         super({
             name: "Weapon",
             color: Color.Red,
-            width: 10,
+            width: 30,
             height: 10,
             pos: vec(offset.x, offset.y),
             collisionType: CollisionType.Passive,
@@ -44,7 +53,15 @@ export class Weapon extends Actor {
         this.weaponActive = true;
         // Implement attack logic here
         console.log(`${this._owner.name} attacks in direction: ${JSON.stringify(direction)}`);
-        this.pos = vec(direction.x * 20, direction.y * 20);
+        if (direction.x === 0 && direction.y === 0) {
+            // this.actions.rotateTo(Math.PI / 2, 100, RotationType.ShortestPath);
+        } else {
+            const targetAngle = rotationMatrixRad[direction.y + 1][direction.x + 1];
+            this.pos = vec(direction.x * 20, direction.y * 20);
+            if (this.rotation !== targetAngle) {
+                this.actions.rotateTo(targetAngle, 100, RotationType.ShortestPath);
+            }
+        }
         this._owner.addChild(this);
         if (this.initialized && this.engineRef) {
             console.log("Scheduling weapon removal after attack");
