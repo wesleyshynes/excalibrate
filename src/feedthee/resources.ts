@@ -9,6 +9,9 @@ export const Resources = {
     PlayerRun: new ImageSource('./images/16x16-Run-Cycle-Sheet.png'),
     PlayerWalk: new ImageSource('./images/16x16-Walk-Cycle-Sheet.png'),
 
+    // Slash Sprite
+    SlashSprite: new ImageSource('./images/slash-sprite-32x16.png'),
+
     CoinImage: new ImageSource('./images/coin_gold.png'),
     // Relative to /public in vite
     // BirdImage: new ex.ImageSource('./images/bird.png'),
