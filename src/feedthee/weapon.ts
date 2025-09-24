@@ -17,6 +17,7 @@ export class Weapon extends Actor {
     weaponActive: boolean = false;
     initialized: boolean = false;
     slashAnimation: Animation | undefined;
+    currentAttackDirection: { x: number, y: number } = { x: 0, y: 1 };
 
     constructor(owner: Actor, offset: { x: number, y: number } = { x: 0, y: 0 }) {
         console.log("Weapon constructor called");
@@ -32,7 +33,6 @@ export class Weapon extends Actor {
     }
 
     onInitialize(engine: Engine) {
-        console.log("Weapon initialized");
         this.engineRef = engine;
 
         const animationSpeed = 30; // Duration of each frame in milliseconds
@@ -49,7 +49,7 @@ export class Weapon extends Actor {
 
         this.slashAnimation = Animation.fromSpriteSheet(
             slashSprite,
-            [0, 1, 2, 3, 4, 5, 6, 7], // All frames in order
+            [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], // All frames in order
             animationSpeed, // Frame duration in milliseconds
             AnimationStrategy.Loop
         );
@@ -59,7 +59,7 @@ export class Weapon extends Actor {
 
         const closeAnimation = Animation.fromSpriteSheet(
             slashSprite,
-            [7, 6, 5, 4, 3, 2, 1, 0], // All frames in reverse order
+            [9, 8, 7, 6, 5, 4, 3, 2, 1, 0], // All frames in reverse order
             animationSpeed,// Frame duration in milliseconds
             AnimationStrategy.Loop
         );
@@ -67,7 +67,6 @@ export class Weapon extends Actor {
         // this.graphics.use('slash');
 
         this.engineRef?.clock.schedule(() => {
-            console.log("Removing weapon after initialization__INIT__");
             this.weaponActive = false;
             this.graphics.use('close');
             this._owner.removeChild(this);
@@ -76,22 +75,18 @@ export class Weapon extends Actor {
     }
 
     attack(direction: { x: number, y: number }) {
-        console.log(this.initialized ? "Weapon already initialized" : "Weapon not initialized yet",
-            this.weaponActive,
-            this.engineRef ? "Engine reference available" : "No engine reference"
-        );
         if (this.weaponActive) {
-            console.log("Weapon is already active, attack ignored");
             return; // Prevent overlapping attacks
         }
         this.graphics.use('slash');
         this.slashAnimation?.reset();
         this.weaponActive = true;
         // Implement attack logic here
-        console.log(`${this._owner.name} attacks in direction: ${JSON.stringify(direction)}`);
+        // console.log(`${this._owner.name} attacks in direction: ${JSON.stringify(direction)}`);
         if (direction.x === 0 && direction.y === 0) {
             // this.actions.rotateTo(Math.PI / 2, 100, RotationType.ShortestPath);
         } else {
+            this.currentAttackDirection = direction;
             const targetAngle = rotationMatrixRad[direction.y + 1][direction.x + 1];
             this.pos = vec(direction.x * 20, direction.y * 20);
             if (this.rotation !== targetAngle) {
@@ -100,9 +95,7 @@ export class Weapon extends Actor {
         }
         this._owner.addChild(this);
         if (this.initialized && this.engineRef) {
-            console.log("Scheduling weapon removal after attack");
             this.engineRef.clock.schedule(() => {
-                console.log("Removing weapon after attack");
                 this.weaponActive = false;
                 this.graphics.use('close');
                 this._owner.removeChild(this);

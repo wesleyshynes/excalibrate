@@ -21,6 +21,8 @@ export class Player extends Actor {
 
     lastSpeed = vec(0, 0);
     lastDirection = 'down';
+    lastXDirection = 0
+    lastYDirection = 1
 
     playerLabel: Label | undefined;
 
@@ -166,22 +168,24 @@ export class Player extends Actor {
             animationDirection = animationDirection ? (animationDirection + '-' + yDirection) : yDirection;
         }
 
-        if (this.weapon) {
-            if (engine.input.keyboard.wasPressed(Keys.Space)) {
-                const weaponXDir = xDirection === 'left' ? -1 : (xDirection === 'right' ? 1 : 0);
-                const weaponYDir = yDirection === 'up' ? -1 : (yDirection === 'down' ? 1 : 0);
-                console.log(`Attacking with direction x:${weaponXDir}, y:${weaponYDir}`);
-                this.weapon.attack({ x: weaponXDir, y: weaponYDir });
-            }
-        }
-
         if (animationDirection) {
             // If there is a direction change, use the new direction
             this.lastDirection = animationDirection;
+            this.lastXDirection = xDirection === 'left' ? -1 : (xDirection === 'right' ? 1 : 0);
+            this.lastYDirection = yDirection === 'up' ? -1 : (yDirection === 'down' ? 1 : 0);
         }
 
         const animationToUse = animationStringBase + '-' + this.lastDirection;
         this.graphics.use(animationToUse);
+
+        if (this.weapon) {
+            if (engine.input.keyboard.wasPressed(Keys.Space)) {
+                const weaponXDir = this.lastXDirection;
+                const weaponYDir = this.lastYDirection;
+                // console.log(`Attacking with direction x:${weaponXDir}, y:${weaponYDir}`);
+                this.weapon.attack({ x: weaponXDir, y: weaponYDir });
+            }
+        }
 
         this.updatePlayerLabel(Math.floor(absoluteVelocity) + ' px/s');
 

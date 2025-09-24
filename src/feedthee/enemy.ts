@@ -1,6 +1,7 @@
 import { Actor, Collider, CollisionContact, CollisionType, Color, Engine, Side, vec } from "excalibur";
 import { Player } from "./player";
 import { gameData } from "./game-data";
+import { Weapon } from "./weapon";
 
 export class Enemy extends Actor {
     engineRef: Engine | undefined;
@@ -35,6 +36,14 @@ export class Enemy extends Actor {
                 other.owner.updatePlayerLabel('Ouch!');
                 gameData.updateHealth(-10);
             }
+        }
+
+        if (self.owner instanceof Enemy && other.owner instanceof Weapon) {
+            console.log('Enemy hit by weapon');
+            // console.log(contact.normal, contact.tangent)
+            // self.owner.setVelocity(-contact.normal.x * 500, -contact.normal.y * 500);
+            const weaponAttackDIR = other.owner.currentAttackDirection;
+            self.owner.setVelocity(weaponAttackDIR.x * 500, weaponAttackDIR.y * 500);
         }
 
     }
