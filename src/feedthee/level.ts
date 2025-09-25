@@ -40,6 +40,7 @@ export class Level extends Scene {
         this.add(this.exitDoor);
         this.add(this.pickup);
         this.add(this.playerHUD);
+        engine.currentScene.camera.strategy.lockToActor(this.player);
 
     }
 

@@ -187,7 +187,7 @@ export class Player extends Actor {
             }
         }
 
-        this.updatePlayerLabel(Math.floor(absoluteVelocity) + ' px/s');
+        // this.updatePlayerLabel(Math.floor(absoluteVelocity) + ' px/s');
 
         // this.vel.x = clamp(this.vel.x, -400, 400); // Limit horizontal speed
         // this.vel.y = clamp(this.vel.y, -400, 400); // Limit vertical speed

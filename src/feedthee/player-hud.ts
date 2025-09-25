@@ -1,7 +1,7 @@
-import { Actor, Color, Font, Label, vec } from "excalibur";
+import { Color, Font, Label, ScreenElement, vec } from "excalibur";
 import { gameData } from "./game-data";
 
-export class PlayerHUD extends Actor {
+export class PlayerHUD extends ScreenElement {
 
     gameDataRef: any;
 

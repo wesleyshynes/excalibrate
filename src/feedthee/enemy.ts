@@ -6,6 +6,9 @@ import { Weapon } from "./weapon";
 export class Enemy extends Actor {
     engineRef: Engine | undefined;
 
+    health: number = 100;
+    enemyLabel: string = '';
+
     constructor(name: string = 'enemy', options?: {
         pos?: { x: number, y: number },
         width?: number,
@@ -44,6 +47,10 @@ export class Enemy extends Actor {
             // self.owner.setVelocity(-contact.normal.x * 500, -contact.normal.y * 500);
             const weaponAttackDIR = other.owner.currentAttackDirection;
             self.owner.setVelocity(weaponAttackDIR.x * 500, weaponAttackDIR.y * 500);
+            self.owner.health -= 25;
+            if (self.owner.health <= 0) {
+                self.owner.kill()
+            }
         }
 
     }

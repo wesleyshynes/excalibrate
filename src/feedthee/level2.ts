@@ -32,6 +32,8 @@ export class Level2 extends Scene {
         this.add(this.enemy);
         this.add(this.exitDoor);
         this.add(this.playerHUD);
+        engine.currentScene.camera.strategy.lockToActor(this.player);
+
     }
 
     onActivate(context: SceneActivationContext<any>): void {
