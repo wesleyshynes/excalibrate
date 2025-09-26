@@ -88,7 +88,11 @@ export class Weapon extends Actor {
         } else {
             this.currentAttackDirection = direction;
             const targetAngle = rotationMatrixRad[direction.y + 1][direction.x + 1];
-            this.pos = vec(direction.x * 20, direction.y * 20);
+            let weaponOffset = 14
+            if (Math.abs(direction.x) + Math.abs(direction.y) === 2) {
+                weaponOffset = 10
+            }
+            this.pos = vec(direction.x * weaponOffset, direction.y * weaponOffset);
             if (this.rotation !== targetAngle) {
                 this.actions.rotateTo(targetAngle, 100, RotationType.ShortestPath);
             }

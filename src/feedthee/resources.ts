@@ -12,6 +12,9 @@ export const Resources = {
     // Slash Sprite
     SlashSprite: new ImageSource('./images/slash-sprite-32x16.png'),
 
+    // Slime sprites
+    SlimeIdle: new ImageSource('./images/slime/Slime1_Idle_body.png'),
+
     CoinImage: new ImageSource('./images/coin_gold.png'),
     // Relative to /public in vite
     // BirdImage: new ex.ImageSource('./images/bird.png'),

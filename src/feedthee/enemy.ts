@@ -1,7 +1,8 @@
-import { Actor, Collider, CollisionContact, CollisionType, Color, Engine, Side, vec } from "excalibur";
+import { Actor, Animation, AnimationStrategy, Collider, CollisionContact, CollisionType, Color, Engine, Side, SpriteSheet, vec } from "excalibur";
 import { Player } from "./player";
 import { gameData } from "./game-data";
 import { Weapon } from "./weapon";
+import { Resources } from "./resources";
 
 export class Enemy extends Actor {
     engineRef: Engine | undefined;
@@ -9,16 +10,19 @@ export class Enemy extends Actor {
     health: number = 100;
     enemyLabel: string = '';
 
+    idleAnimation: Animation | undefined
+
     constructor(name: string = 'enemy', options?: {
         pos?: { x: number, y: number },
-        width?: number,
-        height?: number,
+        // width?: number,
+        // height?: number,
         color?: Color
     }) {
         super({
             pos: vec(options?.pos?.x || 300, options?.pos?.y || 200), // Starting position of the enemy
-            width: options?.width || 32,
-            height: options?.height || 32,
+            // width: options?.width || 28,
+            // height: options?.height || 28,
+            radius: 8,
             color: options?.color || Color.Red,
             collisionType: CollisionType.Active,
             name: name
@@ -28,6 +32,31 @@ export class Enemy extends Actor {
     onInitialize(engine: Engine): void {
         // Initialize enemy specific properties or animations here
         this.engineRef = engine;
+
+        const idleSprite = SpriteSheet.fromImageSource({
+            image: Resources.SlimeIdle,
+            grid: {
+                rows: 4,
+                columns: 6,
+                spriteWidth: 64,
+                spriteHeight: 64,
+            },
+            // spacing: {
+            //     margin: {
+            //         x: 8, y: 8
+            //     }
+            // }
+        })
+        this.idleAnimation = Animation.fromSpriteSheet(
+            idleSprite,
+            [0, 1, 2, 3, 4, 5], // All frames in order
+            100, // Frame duration in milliseconds
+            AnimationStrategy.Loop
+
+        );
+        this.graphics.add('idle', this.idleAnimation);
+        this.graphics.use('idle');
+        this.idleAnimation.reset();
     }
 
     onCollisionStart(self: Collider, other: Collider, side: Side, contact: CollisionContact): void {

@@ -33,8 +33,9 @@ export class Player extends Actor {
     constructor(name: string = 'player') {
         super({
             pos: vec(100, 100), // Starting position of the player
-            width: 16,
-            height: 16,
+            // width: 16,
+            // height: 16,
+            radius: 8,
             color: Color.Yellow,
             collisionType: CollisionType.Active,
             name: name
