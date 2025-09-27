@@ -3,6 +3,7 @@ import { Player } from "./player";
 import { gameData } from "./game-data";
 import { Weapon } from "./weapon";
 import { Resources } from "./resources";
+import { EnemySensor } from "./enemySensor";
 
 export class Enemy extends Actor {
     engineRef: Engine | undefined;
@@ -11,6 +12,11 @@ export class Enemy extends Actor {
     enemyLabel: string = '';
 
     idleAnimation: Animation | undefined
+
+    enemySensor: EnemySensor | undefined;
+
+    followTarget: Player | null = null;
+    followRange: number = 200; // Distance within which the enemy will start following the player
 
     constructor(name: string = 'enemy', options?: {
         pos?: { x: number, y: number },
@@ -57,6 +63,10 @@ export class Enemy extends Actor {
         this.graphics.add('idle', this.idleAnimation);
         this.graphics.use('idle');
         this.idleAnimation.reset();
+
+        this.enemySensor = new EnemySensor(this);
+        this.addChild(this.enemySensor);
+        this.enemySensor.pos = vec(0, 0);
     }
 
     onCollisionStart(self: Collider, other: Collider, side: Side, contact: CollisionContact): void {
@@ -99,7 +109,31 @@ export class Enemy extends Actor {
 
     onPostUpdate(engine: Engine) {
         // Simple AI to move towards the player could be implemented here
-        let maxVelocity = 600;
+        // let maxVelocity = 600;
+        let maxVelocity = 100;
+
+        let moveX = 0;
+        let moveY = 0;
+        
+        if (this.followTarget) {
+            const targetX = this.followTarget.pos.x;
+            const targetY = this.followTarget.pos.y;
+            const distanceToTarget = this.pos.distance(this.followTarget.pos);
+            if (distanceToTarget < this.followRange) {
+                // Move towards the player
+                if (Math.abs(targetX - this.pos.x) > 5) {
+                    moveX = targetX > this.pos.x ? 1 : -1;
+                    this.vel.x += moveX * 2; // Accelerate towards the player
+                }
+                if (Math.abs(targetY - this.pos.y) > 5) {
+                    moveY = targetY > this.pos.y ? 1 : -1;
+                    this.vel.y += moveY * 2; // Accelerate towards the player
+                }
+            } else {
+                this.followTarget = null; // Stop following if out of range
+            }
+        }
+
         // Limit the maximum velocity
         const absoluteVelocity = Math.sqrt(this.vel.x * this.vel.x + this.vel.y * this.vel.y);
         if (absoluteVelocity > maxVelocity) {
@@ -108,7 +142,11 @@ export class Enemy extends Actor {
             this.vel.y *= scale;
         }
         // Apply friction to gradually slow down the enemy
-        this.vel.x *= 0.9;
-        this.vel.y *= 0.9;
+        if (moveX === 0) {
+            this.vel.x *= 0.9;
+        }
+        if (moveY === 0) {
+            this.vel.y *= 0.9;
+        }
     }
 }
