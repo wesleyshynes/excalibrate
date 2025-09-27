@@ -107,14 +107,16 @@ export class Enemy extends Actor {
         this.vel.y = y;
     }
 
-    onPostUpdate(engine: Engine) {
+    onPostUpdate(engine: Engine, delta: number): void {
         // Simple AI to move towards the player could be implemented here
         // let maxVelocity = 600;
         let maxVelocity = 100;
 
         let moveX = 0;
         let moveY = 0;
-        
+
+        const speedDelta = 50 * delta / 1000;
+
         if (this.followTarget) {
             const targetX = this.followTarget.pos.x;
             const targetY = this.followTarget.pos.y;
@@ -123,11 +125,11 @@ export class Enemy extends Actor {
                 // Move towards the player
                 if (Math.abs(targetX - this.pos.x) > 5) {
                     moveX = targetX > this.pos.x ? 1 : -1;
-                    this.vel.x += moveX * 2; // Accelerate towards the player
+                    this.vel.x += moveX * speedDelta; // Accelerate towards the player
                 }
                 if (Math.abs(targetY - this.pos.y) > 5) {
                     moveY = targetY > this.pos.y ? 1 : -1;
-                    this.vel.y += moveY * 2; // Accelerate towards the player
+                    this.vel.y += moveY * speedDelta; // Accelerate towards the player
                 }
             } else {
                 this.followTarget = null; // Stop following if out of range

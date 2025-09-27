@@ -89,12 +89,12 @@ export class Player extends Actor {
         // Handle collision end events here
     }
 
-    onPostUpdate(engine: Engine) {
+    onPostUpdate(engine: Engine, delta: number): void {
 
         let moveX = false
         let moveY = false
 
-        const accelerationIncrement = 5;
+        const accelerationIncrement = 200 * delta / 1000;
 
         let xDirection = ''
         let yDirection = ''
