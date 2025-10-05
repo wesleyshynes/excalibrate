@@ -94,7 +94,7 @@ export class Player extends Actor {
         let moveX = false
         let moveY = false
 
-        const accelerationIncrement = 200 * delta / 1000;
+        const accelerationIncrement = 300 * delta / 1000;
 
         let xDirection = ''
         let yDirection = ''
@@ -103,6 +103,10 @@ export class Player extends Actor {
             engine.input.keyboard.isHeld(Keys.W) ||
             engine.input.keyboard.isHeld(Keys.Up)
         ) {
+            // If lastYDirection was > 0 then set the velocity to 0 before changing direction
+            if (this.lastYDirection > 0) {
+                this.vel.y = 0;
+            }
             this.vel.y += -accelerationIncrement; // Move up
             moveY = true;
             yDirection = 'up'
@@ -112,6 +116,10 @@ export class Player extends Actor {
             engine.input.keyboard.isHeld(Keys.S) ||
             engine.input.keyboard.isHeld(Keys.Down)
         ) {
+            // If lastYDirection was < 0 then set the velocity to 0 before changing direction
+            if (this.lastYDirection < 0) {
+                this.vel.y = 0;
+            }
             this.vel.y += accelerationIncrement; // Move down
             moveY = true;
             yDirection = 'down'
@@ -121,6 +129,10 @@ export class Player extends Actor {
             engine.input.keyboard.isHeld(Keys.A) ||
             engine.input.keyboard.isHeld(Keys.Left)
         ) {
+            // if lastxDirection was > 0 then set the velocity to 0 before changing direction
+            if (this.lastXDirection > 0) {
+                this.vel.x = 0;
+            }
             this.vel.x += -accelerationIncrement; // Move left
             moveX = true;
             xDirection = 'left'
@@ -131,6 +143,10 @@ export class Player extends Actor {
             engine.input.keyboard.isHeld(Keys.D) ||
             engine.input.keyboard.isHeld(Keys.Right)
         ) {
+            // if lastxDirection was < 0 then set the velocity to 0 before changing direction
+            if (this.lastXDirection < 0) {
+                this.vel.x = 0;
+            }
             this.vel.x += accelerationIncrement; // Move right
             moveX = true;
             xDirection = 'right'

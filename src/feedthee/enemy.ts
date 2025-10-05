@@ -11,7 +11,9 @@ export class Enemy extends Actor {
     health: number = 100;
     enemyLabel: string = '';
 
-    idleAnimation: Animation | undefined
+    lastDirection = 'down';
+    lastXDirection = 0
+    lastYDirection = 1
 
     enemySensor: EnemySensor | undefined;
 
@@ -39,34 +41,11 @@ export class Enemy extends Actor {
         // Initialize enemy specific properties or animations here
         this.engineRef = engine;
 
-        const idleSprite = SpriteSheet.fromImageSource({
-            image: Resources.SlimeIdle,
-            grid: {
-                rows: 4,
-                columns: 6,
-                spriteWidth: 64,
-                spriteHeight: 64,
-            },
-            // spacing: {
-            //     margin: {
-            //         x: 8, y: 8
-            //     }
-            // }
-        })
-        this.idleAnimation = Animation.fromSpriteSheet(
-            idleSprite,
-            [0, 1, 2, 3, 4, 5], // All frames in order
-            100, // Frame duration in milliseconds
-            AnimationStrategy.Loop
-
-        );
-        this.graphics.add('idle', this.idleAnimation);
-        this.graphics.use('idle');
-        this.idleAnimation.reset();
-
         this.enemySensor = new EnemySensor(this);
         this.addChild(this.enemySensor);
         this.enemySensor.pos = vec(0, 0);
+
+        this.setupGraphics();
     }
 
     onCollisionStart(self: Collider, other: Collider, side: Side, contact: CollisionContact): void {
@@ -115,7 +94,10 @@ export class Enemy extends Actor {
         let moveX = 0;
         let moveY = 0;
 
-        const speedDelta = 50 * delta / 1000;
+        const speedDelta = 80 * delta / 1000;
+
+        let xDirection = '';
+        let yDirection = '';
 
         if (this.followTarget) {
             const targetX = this.followTarget.pos.x;
@@ -123,17 +105,64 @@ export class Enemy extends Actor {
             const distanceToTarget = this.pos.distance(this.followTarget.pos);
             if (distanceToTarget < this.followRange) {
                 // Move towards the player
-                if (Math.abs(targetX - this.pos.x) > 5) {
+                if (Math.abs(targetX - this.pos.x) > 1) {
                     moveX = targetX > this.pos.x ? 1 : -1;
+                    // Update animation key based on movement direction
+                    xDirection = moveX === 1 ? 'right' : 'left';
                     this.vel.x += moveX * speedDelta; // Accelerate towards the player
                 }
-                if (Math.abs(targetY - this.pos.y) > 5) {
+                if (Math.abs(targetY - this.pos.y) > 1) {
                     moveY = targetY > this.pos.y ? 1 : -1;
+                    yDirection = moveY === 1 ? 'down' : 'up';
                     this.vel.y += moveY * speedDelta; // Accelerate towards the player
                 }
+
             } else {
                 this.followTarget = null; // Stop following if out of range
             }
+        }
+
+        let animationStringBase = 'idle';
+        // if (absoluteVelocity > 220) {
+        //     animationStringBase = 'run';
+        // } else if (absoluteVelocity > 20) {
+        //     animationStringBase = 'walk';
+        // } else {
+        //     animationStringBase = 'idle';
+        // }
+
+        let animationDirection = '';
+        if (xDirection) {
+            animationDirection = xDirection;
+        }
+        if (yDirection) {
+            // animationDirection = animationDirection ? (animationDirection + '-' + yDirection) : yDirection;
+            // if the y speed is greater than the x speed then use the y direction
+            if (Math.abs(this.vel.y) > Math.abs(this.vel.x)) {
+                animationDirection = yDirection;
+            }
+        }
+
+        if (animationDirection) {
+            // If there is a direction change, use the new direction
+            this.lastDirection = animationDirection;
+            this.lastXDirection = xDirection === 'left' ? -1 : (xDirection === 'right' ? 1 : 0);
+            this.lastYDirection = yDirection === 'up' ? -1 : (yDirection === 'down' ? 1 : 0);
+        }
+
+        const animationToUse = animationStringBase + '-' + this.lastDirection;
+        this.graphics.use(animationToUse);
+
+        // if (animationKey !== this.lastDirection) {
+        //     this.graphics.use(animationKey);
+        //     this.lastDirection = animationKey;
+        // }
+        
+        if (moveX !== 0) {
+            this.lastXDirection = moveX;
+        }
+        if (moveY !== 0) {
+            this.lastYDirection = moveY;
         }
 
         // Limit the maximum velocity
@@ -150,5 +179,60 @@ export class Enemy extends Actor {
         if (moveY === 0) {
             this.vel.y *= 0.9;
         }
+    }
+
+    setupGraphics() {
+        const animationSpeed = 60
+
+        const idleSprite = SpriteSheet.fromImageSource({
+            image: Resources.SlimeIdle,
+            grid: {
+                rows: 4,
+                columns: 6,
+                spriteWidth: 64,
+                spriteHeight: 64,
+            },
+            // spacing: {
+            //     margin: {
+            //         x: 8, y: 8
+            //     }
+            // }
+        })
+        const idleAnimationDown = Animation.fromSpriteSheet(
+            idleSprite,
+            [0, 1, 2, 3, 4, 5], // All frames in order
+            animationSpeed, // Frame duration in milliseconds
+            AnimationStrategy.Loop
+        );
+        const idleAnimationRight = Animation.fromSpriteSheet(
+            idleSprite,
+            [6, 7, 8, 9, 10, 11], // All frames in order
+            animationSpeed, // Frame duration in milliseconds
+            AnimationStrategy.Loop
+        );
+        const idleAnimationLeft = Animation.fromSpriteSheet(
+            idleSprite,
+            [12, 13, 14, 15, 16, 17], // All frames in order
+            animationSpeed, // Frame duration in milliseconds
+            AnimationStrategy.Loop
+        );
+        const idleAnimationUp = Animation.fromSpriteSheet(
+            idleSprite,
+            [18, 19, 20, 21, 22, 23], // All frames in order
+            animationSpeed, // Frame duration in milliseconds
+            AnimationStrategy.Loop
+        );
+
+        this.graphics.add('idle-down', idleAnimationDown);
+        this.graphics.add('idle-left', idleAnimationLeft);
+        this.graphics.add('idle-right', idleAnimationRight);
+        this.graphics.add('idle-up', idleAnimationUp);
+
+        this.graphics.use(idleAnimationDown);
+
+        idleAnimationDown.reset();
+        idleAnimationLeft.reset();
+        idleAnimationRight.reset();
+        idleAnimationUp.reset();
     }
 }
