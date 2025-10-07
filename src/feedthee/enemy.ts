@@ -122,15 +122,26 @@ export class Enemy extends Actor {
             }
         }
 
-        let animationStringBase = 'idle';
-        // if (absoluteVelocity > 220) {
-        //     animationStringBase = 'run';
-        // } else if (absoluteVelocity > 20) {
-        //     animationStringBase = 'walk';
-        // } else {
-        //     animationStringBase = 'idle';
-        // }
+        if (moveX !== 0) {
+            this.lastXDirection = moveX;
+        }
+        if (moveY !== 0) {
+            this.lastYDirection = moveY;
+        }
 
+        // Limit the maximum velocity
+        const absoluteVelocity = Math.sqrt(this.vel.x * this.vel.x + this.vel.y * this.vel.y);
+        if (absoluteVelocity > maxVelocity) {
+            const scale = maxVelocity / absoluteVelocity;
+            this.vel.x *= scale;
+            this.vel.y *= scale;
+        }
+
+        let animationStringBase = 'idle';
+        if (absoluteVelocity > 2) {
+            animationStringBase = 'run';
+        }
+        
         let animationDirection = '';
         if (xDirection) {
             animationDirection = xDirection;
@@ -157,21 +168,8 @@ export class Enemy extends Actor {
         //     this.graphics.use(animationKey);
         //     this.lastDirection = animationKey;
         // }
-        
-        if (moveX !== 0) {
-            this.lastXDirection = moveX;
-        }
-        if (moveY !== 0) {
-            this.lastYDirection = moveY;
-        }
 
-        // Limit the maximum velocity
-        const absoluteVelocity = Math.sqrt(this.vel.x * this.vel.x + this.vel.y * this.vel.y);
-        if (absoluteVelocity > maxVelocity) {
-            const scale = maxVelocity / absoluteVelocity;
-            this.vel.x *= scale;
-            this.vel.y *= scale;
-        }
+
         // Apply friction to gradually slow down the enemy
         if (moveX === 0) {
             this.vel.x *= 0.9;
@@ -234,5 +232,55 @@ export class Enemy extends Actor {
         idleAnimationLeft.reset();
         idleAnimationRight.reset();
         idleAnimationUp.reset();
+
+        const runSprite = SpriteSheet.fromImageSource({
+            image: Resources.SlimeRun,
+            grid: {
+                rows: 4,
+                columns: 8,
+                spriteWidth: 64,
+                spriteHeight: 64,
+            },
+            // spacing: {
+            //     margin: {
+            //         x: 8, y: 8
+            //     }
+            // }
+        })
+
+        const runAnimationDown = Animation.fromSpriteSheet(
+            runSprite,
+            [0, 1, 2, 3, 4, 5, 6, 7], // All frames in order
+            animationSpeed, // Frame duration in milliseconds
+            AnimationStrategy.Loop
+        );
+        const runAnimationUp = Animation.fromSpriteSheet(
+            runSprite,
+            [8, 9, 10, 11, 12, 13, 14, 15], // All frames in order
+            animationSpeed, // Frame duration in milliseconds
+            AnimationStrategy.Loop
+        );
+        const runAnimationLeft = Animation.fromSpriteSheet(
+            runSprite,
+            [16, 17, 18, 19, 20, 21, 22, 23], // All frames in order
+            animationSpeed, // Frame duration in milliseconds
+            AnimationStrategy.Loop
+        );
+        const runAnimationRight = Animation.fromSpriteSheet(
+            runSprite,
+            [24, 25, 26, 27, 28, 29, 30, 31], // All frames in order
+            animationSpeed, // Frame duration in milliseconds
+            AnimationStrategy.Loop
+        );
+
+        this.graphics.add('run-down', runAnimationDown);
+        this.graphics.add('run-left', runAnimationLeft);
+        this.graphics.add('run-right', runAnimationRight);
+        this.graphics.add('run-up', runAnimationUp);
+
+        runAnimationDown.reset();
+        runAnimationLeft.reset();
+        runAnimationRight.reset();
+        runAnimationUp.reset();
     }
 }
