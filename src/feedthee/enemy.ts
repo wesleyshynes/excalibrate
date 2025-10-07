@@ -22,14 +22,10 @@ export class Enemy extends Actor {
 
     constructor(name: string = 'enemy', options?: {
         pos?: { x: number, y: number },
-        // width?: number,
-        // height?: number,
         color?: Color
     }) {
         super({
             pos: vec(options?.pos?.x || 300, options?.pos?.y || 200), // Starting position of the enemy
-            // width: options?.width || 28,
-            // height: options?.height || 28,
             radius: 8,
             color: options?.color || Color.Red,
             collisionType: CollisionType.Active,
@@ -49,7 +45,7 @@ export class Enemy extends Actor {
     }
 
     onCollisionStart(self: Collider, other: Collider, side: Side, contact: CollisionContact): void {
-        // Handle collision start events here
+
         if (self.owner instanceof Enemy && other.owner instanceof Player) {
             const playerLastSpeed = (other.owner as Player).lastSpeed;
             self.owner.setVelocity(playerLastSpeed.x, playerLastSpeed.y);
@@ -61,8 +57,6 @@ export class Enemy extends Actor {
 
         if (self.owner instanceof Enemy && other.owner instanceof Weapon) {
             console.log('Enemy hit by weapon');
-            // console.log(contact.normal, contact.tangent)
-            // self.owner.setVelocity(-contact.normal.x * 500, -contact.normal.y * 500);
             const weaponAttackDIR = other.owner.currentAttackDirection;
             self.owner.setVelocity(weaponAttackDIR.x * 500, weaponAttackDIR.y * 500);
             self.owner.health -= 25;
@@ -87,8 +81,6 @@ export class Enemy extends Actor {
     }
 
     onPostUpdate(engine: Engine, delta: number): void {
-        // Simple AI to move towards the player could be implemented here
-        // let maxVelocity = 600;
         let maxVelocity = 100;
 
         let moveX = 0;
@@ -141,7 +133,7 @@ export class Enemy extends Actor {
         if (absoluteVelocity > 2) {
             animationStringBase = 'run';
         }
-        
+
         let animationDirection = '';
         if (xDirection) {
             animationDirection = xDirection;
@@ -163,13 +155,6 @@ export class Enemy extends Actor {
 
         const animationToUse = animationStringBase + '-' + this.lastDirection;
         this.graphics.use(animationToUse);
-
-        // if (animationKey !== this.lastDirection) {
-        //     this.graphics.use(animationKey);
-        //     this.lastDirection = animationKey;
-        // }
-
-
         // Apply friction to gradually slow down the enemy
         if (moveX === 0) {
             this.vel.x *= 0.9;
@@ -190,11 +175,6 @@ export class Enemy extends Actor {
                 spriteWidth: 64,
                 spriteHeight: 64,
             },
-            // spacing: {
-            //     margin: {
-            //         x: 8, y: 8
-            //     }
-            // }
         })
         const idleAnimationDown = Animation.fromSpriteSheet(
             idleSprite,
@@ -241,11 +221,6 @@ export class Enemy extends Actor {
                 spriteWidth: 64,
                 spriteHeight: 64,
             },
-            // spacing: {
-            //     margin: {
-            //         x: 8, y: 8
-            //     }
-            // }
         })
 
         const runAnimationDown = Animation.fromSpriteSheet(

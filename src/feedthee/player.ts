@@ -33,8 +33,6 @@ export class Player extends Actor {
     constructor(name: string = 'player') {
         super({
             pos: vec(100, 100), // Starting position of the player
-            // width: 16,
-            // height: 16,
             radius: 8,
             color: Color.Yellow,
             collisionType: CollisionType.Active,
@@ -203,11 +201,6 @@ export class Player extends Actor {
                 this.weapon.attack({ x: weaponXDir, y: weaponYDir });
             }
         }
-
-        // this.updatePlayerLabel(Math.floor(absoluteVelocity) + ' px/s');
-
-        // this.vel.x = clamp(this.vel.x, -400, 400); // Limit horizontal speed
-        // this.vel.y = clamp(this.vel.y, -400, 400); // Limit vertical speed
 
         if (moveY === false) {
             this.vel.y *= 0.9; // Stop moving if no button is pressed
