@@ -15,6 +15,7 @@ export const Resources = {
     // Slime sprites
     SlimeIdle: new ImageSource('./images/slime/Slime1_Idle_body.png'),
     SlimeRun: new ImageSource('./images/slime/Slime1_Run_body.png'),
+    SlimeWalk: new ImageSource('./images/slime/Slime1_Walk_body.png'),
 
     CoinImage: new ImageSource('./images/coin_gold.png'),
     // Relative to /public in vite

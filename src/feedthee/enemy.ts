@@ -130,8 +130,10 @@ export class Enemy extends Actor {
         }
 
         let animationStringBase = 'idle';
-        if (absoluteVelocity > 2) {
+        if (absoluteVelocity > 80) {
             animationStringBase = 'run';
+        } else if (absoluteVelocity > 2) {
+            animationStringBase = 'walk';
         }
 
         let animationDirection = '';
@@ -257,5 +259,50 @@ export class Enemy extends Actor {
         runAnimationLeft.reset();
         runAnimationRight.reset();
         runAnimationUp.reset();
+
+        const walkSpriteSheet = SpriteSheet.fromImageSource({
+            image: Resources.SlimeWalk,
+            grid: {
+                rows: 4,
+                columns: 8,
+                spriteWidth: 64,
+                spriteHeight: 64,
+            },
+        })
+
+        const walkAnimationDown = Animation.fromSpriteSheet(
+            walkSpriteSheet,
+            [0, 1, 2, 3, 4, 5, 6, 7], // All frames in order
+            animationSpeed, // Frame duration in milliseconds
+            AnimationStrategy.Loop
+        );
+        const walkAnimationUp = Animation.fromSpriteSheet(
+            walkSpriteSheet,
+            [8, 9, 10, 11, 12, 13, 14, 15], // All frames in order
+            animationSpeed, // Frame duration in milliseconds
+            AnimationStrategy.Loop
+        );
+        const walkAnimationLeft = Animation.fromSpriteSheet(
+            walkSpriteSheet,
+            [16, 17, 18, 19, 20, 21, 22, 23], // All frames in order
+            animationSpeed, // Frame duration in milliseconds
+            AnimationStrategy.Loop
+        );
+        const walkAnimationRight = Animation.fromSpriteSheet(
+            walkSpriteSheet,
+            [24, 25, 26, 27, 28, 29, 30, 31], // All frames in order
+            animationSpeed, // Frame duration in milliseconds
+            AnimationStrategy.Loop
+        );
+
+        this.graphics.add('walk-down', walkAnimationDown);
+        this.graphics.add('walk-left', walkAnimationLeft);
+        this.graphics.add('walk-right', walkAnimationRight);
+        this.graphics.add('walk-up', walkAnimationUp);
+
+        walkAnimationDown.reset();
+        walkAnimationLeft.reset();
+        walkAnimationRight.reset();
+        walkAnimationUp.reset();
     }
 }
