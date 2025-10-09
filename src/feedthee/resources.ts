@@ -17,6 +17,9 @@ export const Resources = {
     SlimeRun: new ImageSource('./images/slime/Slime1_Run_body.png'),
     SlimeWalk: new ImageSource('./images/slime/Slime1_Walk_body.png'),
 
+    // TileSheet
+    TileSheet: new ImageSource('./images/RPGpack_sheet.png'),
+
     CoinImage: new ImageSource('./images/coin_gold.png'),
     // Relative to /public in vite
     // BirdImage: new ex.ImageSource('./images/bird.png'),

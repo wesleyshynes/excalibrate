@@ -18,7 +18,7 @@ export class Enemy extends Actor {
     enemySensor: EnemySensor | undefined;
 
     followTarget: Player | null = null;
-    followRange: number = 200; // Distance within which the enemy will start following the player
+    followRange: number = 300; // Distance within which the enemy will start following the player
 
     constructor(name: string = 'enemy', options?: {
         pos?: { x: number, y: number },

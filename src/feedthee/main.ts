@@ -44,3 +44,5 @@ game.start(loader).then(() => {
 //   positionUI(game);
 //   initMuteButton()
 });
+
+game.toggleDebug();
