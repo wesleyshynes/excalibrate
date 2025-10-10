@@ -16,6 +16,7 @@ import {
 } from "excalibur";
 import { Resources } from "./resources";
 import { Weapon } from "./weapon";
+import { gameData } from "./game-data";
 
 export class Player extends Actor {
 
@@ -88,6 +89,14 @@ export class Player extends Actor {
     }
 
     onPostUpdate(engine: Engine, delta: number): void {
+
+        // if player health is 0 do not allow movement
+        if (gameData.health <= 0) {
+            engine.goToScene('TitleScreen');
+            gameData.health = 100;
+            gameData.score = 0;
+            return;
+        }
 
         let moveX = false
         let moveY = false

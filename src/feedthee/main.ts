@@ -4,6 +4,7 @@ import { Color, DisplayMode, Engine, Loader } from 'excalibur';
 import { Level } from './level';
 import { Level2 } from './level2';
 import { Resources } from './resources';
+import { TitleScreen } from './titleScreen';
 
 // import { Resources } from './resources';
 // import { initMuteButton } from './ui';
@@ -27,7 +28,8 @@ const game = new Engine({
   displayMode: DisplayMode.FitScreen,
   scenes: { 
     Level: Level,
-    Level2: Level2
+    Level2: Level2,
+    TitleScreen: TitleScreen
   },
 });
 
@@ -40,9 +42,11 @@ loader.logoHeight = 32;
 loader.backgroundColor = '#333';
 
 game.start(loader).then(() => {
-  game.goToScene('Level');
+  // game.goToScene('Level');
+  // game.goToScene('Level');
+  game.goToScene('TitleScreen');
 //   positionUI(game);
 //   initMuteButton()
 });
 
-game.toggleDebug();
+// game.toggleDebug();

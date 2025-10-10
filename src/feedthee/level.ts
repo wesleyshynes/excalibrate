@@ -1,14 +1,10 @@
 import { Color, Engine, Scene, SceneActivationContext, SpriteSheet, TileMap, vec } from "excalibur";
 import { Player } from "./player";
-import { Wall } from "./wall";
 import { Enemy } from "./enemy";
 import { Door } from "./door";
 import { PickUp } from "./pickup";
 import { PlayerHUD } from "./player-hud";
 import { Resources } from "./resources";
-
-const gameWidth = 800;
-const gameHeight = 600;
 
 export class Level extends Scene {
 
@@ -19,20 +15,13 @@ export class Level extends Scene {
     startingX = 100;
     firstActivation: boolean = false;
 
-    walls = [
-        new Wall(gameWidth / 2, 10, gameWidth, 20, Color.Cyan),    // Top wall
-        new Wall(gameWidth / 2, gameHeight - 10, gameWidth, 20, Color.Cyan), // Bottom wall
-        new Wall(10, gameHeight / 2, 20, gameHeight, Color.Cyan),   // Left wall
-        new Wall(gameWidth - 10, gameHeight / 2, 20, gameHeight, Color.Cyan) // Right wall
-    ]
-
     enemy = new Enemy('enemy1')
 
     pickup = new PickUp('pickup1', {
-        pos: { x: gameWidth / 2, y: gameHeight / 2 },
+        pos: { x: 400, y: 300  },
     })
 
-    exitDoor = new Door(gameWidth - 50, gameHeight / 2, 40, 80, Color.Black, 'Level2')
+    exitDoor = new Door(750, 300, 40, 80, Color.Black, 'Level2')
 
     onInitialize(engine: Engine): void {
         // this.walls.forEach(wall => this.add(wall));
@@ -51,7 +40,7 @@ export class Level extends Scene {
         this.player.vel = vec(0,0);
         this.player.pos = vec(
             this.firstActivation ? this.exitDoor.pos.x - 60 : this.startingX, 
-            gameHeight / 2
+            this.firstActivation ? this.exitDoor.pos.y : 300
         );
         this.firstActivation = true;
     }
