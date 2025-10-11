@@ -5,6 +5,7 @@ import { Level } from './level';
 import { Level2 } from './level2';
 import { Resources } from './resources';
 import { TitleScreen } from './titleScreen';
+import { OptionsScreen } from './optionsScreen';
 
 // import { Resources } from './resources';
 // import { initMuteButton } from './ui';
@@ -29,7 +30,8 @@ const game = new Engine({
   scenes: { 
     Level: Level,
     Level2: Level2,
-    TitleScreen: TitleScreen
+    TitleScreen: TitleScreen,
+    OptionsScreen: OptionsScreen
   },
 });
 

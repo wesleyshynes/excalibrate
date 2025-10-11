@@ -6,6 +6,7 @@ export class TitleScreen extends Scene {
     startLabel: Label | undefined;
 
     startButton: Button | undefined;
+    optionsButton: Button | undefined;
 
     onInitialize(engine: Engine): void {
         this.titleLabel = new Label({
@@ -20,26 +21,23 @@ export class TitleScreen extends Scene {
         });
         this.add(this.titleLabel);
 
-        // this.startLabel = new Label({
-        //     text: "Press Enter to Start",
-        //     color: Color.White,
-        //     pos: vec(engine.drawWidth / 2, engine.drawHeight / 2),
-        //     font: new Font({
-        //         size: 24,
-        //         family: "Arial",
-        //         textAlign: TextAlign.Center
-        //     })
-        // });
-        // this.add(this.startLabel);
-
         this.startButton = new Button({
             text: "Start Game",
-            pos: { x: engine.drawWidth / 2, y: engine.drawHeight / 2 },
+            pos: { x: engine.drawWidth / 2, y: engine.drawHeight / 2 - 30 },
             onClick: () => {
                 engine.goToScene('Level');
             }
         });
         this.add(this.startButton);
+
+        this.optionsButton = new Button({
+            text: "Options",
+            pos: { x: engine.drawWidth / 2, y: engine.drawHeight / 2 + 30 },
+            onClick: () => {
+                engine.goToScene('OptionsScreen');
+            }
+        });
+        this.add(this.optionsButton);
     }
 
     onPostUpdate(engine: Engine, elapsed: number): void {

@@ -2,6 +2,8 @@ class GameData {
     score: number = 0;
     health: number = 100;
 
+    farts: boolean = true
+
     updateScore(amount: number) {
         this.score += amount;
     }
