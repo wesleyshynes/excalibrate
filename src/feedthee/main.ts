@@ -1,11 +1,11 @@
 // main.ts
 // https://github.com/excaliburjs/sample-excalibird/tree/main/src
 import { Color, DisplayMode, Engine, Loader } from 'excalibur';
-import { Level } from './level';
-import { Level2 } from './level2';
+import { Level } from './levels/level';
+import { Level2 } from './levels/level2';
 import { Resources } from './resources';
-import { TitleScreen } from './titleScreen';
-import { OptionsScreen } from './optionsScreen';
+import { TitleScreen } from './screens/titleScreen';
+import { OptionsScreen } from './screens/optionsScreen';
 
 // import { Resources } from './resources';
 // import { initMuteButton } from './ui';

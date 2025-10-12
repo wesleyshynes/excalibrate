@@ -17,6 +17,7 @@ import {
 import { Resources } from "./resources";
 import { Weapon } from "./weapon";
 import { gameData } from "./game-data";
+import { Gun } from "./gun";
 
 export class Player extends Actor {
 
@@ -30,6 +31,7 @@ export class Player extends Actor {
     engineRef: Engine | undefined;
 
     weapon: Weapon | undefined;
+    gun: Gun | undefined;
 
     constructor(name: string = 'player') {
         super({
@@ -63,6 +65,12 @@ export class Player extends Actor {
         this.addChild(playerLabel);
 
         this.weapon = new Weapon(this, { x: 0, y: 0 });
+        engine.add(this.weapon);
+        engine.remove(this.weapon);
+
+        this.gun = new Gun(this, { x: 0, y: 0 });
+        engine.add(this.gun);
+        engine.remove(this.gun);
 
         this.setupGraphics();
     }
@@ -208,6 +216,15 @@ export class Player extends Actor {
                 const weaponYDir = this.lastYDirection;
                 // console.log(`Attacking with direction x:${weaponXDir}, y:${weaponYDir}`);
                 this.weapon.attack({ x: weaponXDir, y: weaponYDir });
+            }
+        }
+
+        if (this.gun) {
+            if (engine.input.keyboard.wasPressed(Keys.F)) {
+                const gunXDir = this.lastXDirection;
+                const gunYDir = this.lastYDirection;
+                // console.log(`Shooting with direction x:${gunXDir}, y:${gunYDir}`);
+                this.gun.shoot({ x: gunXDir, y: gunYDir });
             }
         }
 

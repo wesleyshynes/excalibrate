@@ -1,14 +1,7 @@
 import { Actor, CollisionType, Color, Engine, RotationType, SpriteSheet, vec, Animation, AnimationStrategy } from "excalibur";
 import { Resources } from "./resources";
+import { rotationMatrixRad } from "./utilities/rotationStuff";
 
-
-const rotationMatrix = [
-    [315, 0, 45],
-    [270, 0, 90],
-    [225, 180, 135],
-]
-
-const rotationMatrixRad = rotationMatrix.map(row => row.map(deg => deg * (Math.PI / 180)));
 
 export class Weapon extends Actor {
 
@@ -33,6 +26,7 @@ export class Weapon extends Actor {
     }
 
     onInitialize(engine: Engine) {
+        console.log("Weapon initialized");
         this.engineRef = engine;
 
         const animationSpeed = 30; // Duration of each frame in milliseconds
@@ -66,11 +60,7 @@ export class Weapon extends Actor {
         this.graphics.add('close', closeAnimation);
         // this.graphics.use('slash');
 
-        this.engineRef?.clock.schedule(() => {
-            this.weaponActive = false;
-            this.graphics.use('close');
-            this._owner.removeChild(this);
-        }, 300);
+        this.weaponActive = false;
         this.initialized = true;
     }
 

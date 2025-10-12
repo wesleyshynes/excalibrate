@@ -1,5 +1,5 @@
 import { Color, Engine, Font, Keys, Label, Scene, TextAlign, vec } from "excalibur";
-import { Button } from "./button";
+import { Button } from "../button";
 
 export class TitleScreen extends Scene {
     titleLabel: Label | undefined;

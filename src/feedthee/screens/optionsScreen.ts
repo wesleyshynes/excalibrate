@@ -1,6 +1,6 @@
 import { Color, Engine, Font, Keys, Label, Scene, TextAlign, vec } from "excalibur";
-import { Button } from "./button";
-import { gameData } from "./game-data";
+import { Button } from "../button";
+import { gameData } from "../game-data";
 
 export class OptionsScreen extends Scene {
     titleLabel: Label | undefined;

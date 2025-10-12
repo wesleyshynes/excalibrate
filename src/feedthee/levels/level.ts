@@ -1,10 +1,10 @@
 import { Color, Engine, Scene, SceneActivationContext, SpriteSheet, TileMap, vec } from "excalibur";
-import { Player } from "./player";
-import { Enemy } from "./enemy";
-import { Door } from "./door";
-import { PickUp } from "./pickup";
-import { PlayerHUD } from "./player-hud";
-import { Resources } from "./resources";
+import { Player } from "../player";
+import { Enemy } from "../enemy";
+import { Door } from "../door";
+import { PickUp } from "../pickup";
+import { PlayerHUD } from "../player-hud";
+import { Resources } from "../resources";
 
 export class Level extends Scene {
 
