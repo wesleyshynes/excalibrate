@@ -1,5 +1,6 @@
 import { Actor, CollisionType, Color, RotationType, vec } from "excalibur";
 import { rotationMatrixRad } from "../utilities/rotationStuff";
+import { Bullet } from "./bullet";
 
 
 export class Gun extends Actor {
@@ -9,8 +10,15 @@ export class Gun extends Actor {
     gunActive: boolean = false;
     initialized: boolean = false;
 
-    bullet: Actor | null = null;
+    // bullet: Bullet | null = null;
+    maxLiveBullets: number = 3;
+    shotCooldown: number = 200; // milliseconds
+    bullets: Bullet[] = [];
     bulletSpeed: number = 300
+
+    lastShotTime: number = 0;
+
+
     currentAttackDirection: { x: number, y: number } = { x: 0, y: 1 };
 
     constructor(owner: Actor, offset: { x: number, y: number } = { x: 0, y: 0 }) {
@@ -30,15 +38,10 @@ export class Gun extends Actor {
         console.log("Gun initialized");
         this.engineRef = engine;
 
-        this.bullet = new Actor({
-            name: "Bullet",
-            color: Color.Yellow,
-            // radius: 4,
-            width: 4,
-            height: 8,
-            pos: vec(this._owner.pos.x, this._owner.pos.y),
-            collisionType: CollisionType.Active,
-        });
+        for (let i = 0; i < this.maxLiveBullets; i++) {
+            const bullet = new Bullet(this);
+            this.bullets.push(bullet);
+        }
 
         // put animation and graphics here if needed
 
@@ -50,7 +53,18 @@ export class Gun extends Actor {
         if (this.gunActive) {
             return; // Gun is already active, do not shoot again
         }
+        if (this.bullets.length === 0) {
+            console.error("No bullets available to shoot.");
+            return;
+        }
         this.gunActive = true;
+
+        const bulletToShoot = this.bullets.shift();
+        if (!bulletToShoot) {
+            console.error("No bullet found to shoot.");
+            this.gunActive = false;
+            return;
+        }
 
         let bulletX = 0;
         let bulletY = 0;
@@ -77,32 +91,31 @@ export class Gun extends Actor {
         }
 
         this._owner.addChild(this);
-        if (!this.bullet) {
-            console.error("Bullet actor is not initialized.");
-            return;
-        }
-        this.bullet.pos = vec(
-            this._owner.pos.x + bulletX, 
-            this._owner.pos.y + bulletY
-        );
-        if (this.bullet.rotation !== bulletRotation) {
-            this.bullet.actions.rotateTo(bulletRotation, 100, RotationType.ShortestPath);
-        }
-        this.engineRef.currentScene.add(this.bullet);
-        this.bullet.vel.x = this.currentAttackDirection.x * this.bulletSpeed;
-        this.bullet.vel.y = this.currentAttackDirection.y * this.bulletSpeed;
+
+        bulletToShoot.shootBullet(
+            { x: this._owner.pos.x + bulletX, y: this._owner.pos.y + bulletY },
+            { x: this.currentAttackDirection.x * this.bulletSpeed, y: this.currentAttackDirection.y * this.bulletSpeed },
+            bulletRotation
+        )
+        this.engineRef.currentScene.add(bulletToShoot);
+
+        // this.bullet.pos = vec(
+        //     this._owner.pos.x + bulletX, 
+        //     this._owner.pos.y + bulletY
+        // );
+        // if (this.bullet.rotation !== bulletRotation) {
+        //     this.bullet.actions.rotateTo(bulletRotation, 100, RotationType.ShortestPath);
+        // }
+        // this.engineRef.currentScene.add(this.bullet);
+        // this.bullet.vel.x = this.currentAttackDirection.x * this.bulletSpeed;
+        // this.bullet.vel.y = this.currentAttackDirection.y * this.bulletSpeed;
 
         // Schedule to reset gunActive after 500 milliseconds
         if (this.initialized && this.engineRef) {
             this.engineRef?.clock.schedule(() => {
                 this.gunActive = false;
                 this._owner.removeChild(this);
-                if (!this.bullet) {
-                    console.error("Bullet actor is not initialized.");
-                    return;
-                }
-                this.engineRef.currentScene.remove(this.bullet);
-            }, 500);
+            }, this.shotCooldown);
         }
     }
     
