@@ -1,5 +1,5 @@
 import { Actor, CollisionType, Color, RotationType, vec } from "excalibur";
-import { rotationMatrixRad } from "./utilities/rotationStuff";
+import { rotationMatrixRad } from "../utilities/rotationStuff";
 
 
 export class Gun extends Actor {

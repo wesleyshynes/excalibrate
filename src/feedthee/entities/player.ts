@@ -14,9 +14,9 @@ import {
     TextAlign,
     vec,
 } from "excalibur";
-import { Resources } from "./resources";
+import { Resources } from "../resources";
 import { Weapon } from "./weapon";
-import { gameData } from "./game-data";
+import { gameData } from "../game-data";
 import { Gun } from "./gun";
 
 export class Player extends Actor {

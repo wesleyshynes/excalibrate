@@ -1,7 +1,7 @@
 import { Color, Engine, Scene, SceneActivationContext, vec } from "excalibur";
-import { Player } from "../player";
-import { Wall } from "../wall";
-import { Enemy } from "../enemy";
+import { Player } from "../entities/player";
+import { Wall } from "../entities/wall";
+import { Enemy } from "../entities/enemy";
 import { Door } from "../door";
 import { PlayerHUD } from "../player-hud";
 

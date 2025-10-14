@@ -13,8 +13,8 @@ import {
     vec
 } from "excalibur";
 import { Player } from "./player";
-import { gameData } from "./game-data";
-import { Resources } from "./resources";
+import { gameData } from "../game-data";
+import { Resources } from "../resources";
 
 export class PickUp extends Actor {
     engineRef: Engine | undefined;

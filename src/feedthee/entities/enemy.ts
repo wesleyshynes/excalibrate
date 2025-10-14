@@ -1,8 +1,8 @@
 import { Actor, Animation, AnimationStrategy, Collider, CollisionContact, CollisionType, Color, Engine, Side, SpriteSheet, vec } from "excalibur";
 import { Player } from "./player";
-import { gameData } from "./game-data";
+import { gameData } from "../game-data";
 import { Weapon } from "./weapon";
-import { Resources } from "./resources";
+import { Resources } from "../resources";
 import { EnemySensor } from "./enemySensor";
 
 export class Enemy extends Actor {
