@@ -1,6 +1,6 @@
 import { Actor, CollisionType, Color, Engine, RotationType, SpriteSheet, vec, Animation, AnimationStrategy } from "excalibur";
-import { Resources } from "./resources";
-import { rotationMatrixRad } from "./utilities/rotationStuff";
+import { Resources } from "../resources";
+import { rotationMatrixRad } from "../utilities/rotationStuff";
 
 
 export class Weapon extends Actor {

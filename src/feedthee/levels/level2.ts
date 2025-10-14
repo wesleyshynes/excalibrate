@@ -2,7 +2,7 @@ import { Color, Engine, Scene, SceneActivationContext, vec } from "excalibur";
 import { Player } from "../entities/player";
 import { Wall } from "../entities/wall";
 import { Enemy } from "../entities/enemy";
-import { Door } from "../door";
+import { Door } from "../entities/door";
 import { PlayerHUD } from "../player-hud";
 
 const gameWidth = 800;
