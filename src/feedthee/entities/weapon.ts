@@ -1,6 +1,7 @@
-import { Actor, CollisionType, Color, Engine, RotationType, SpriteSheet, vec, Animation, AnimationStrategy } from "excalibur";
+import { Actor, CollisionType, Color, Engine, RotationType, SpriteSheet, vec, Animation, AnimationStrategy, Collider, CollisionContact, Side } from "excalibur";
 import { Resources } from "../resources";
 import { rotationMatrixRad } from "../utilities/rotationStuff";
+import { Enemy } from "./enemy";
 
 
 export class Weapon extends Actor {
@@ -23,6 +24,17 @@ export class Weapon extends Actor {
             collisionType: CollisionType.Passive,
         });
         this._owner = owner;
+    }
+
+    onCollisionStart(self: Collider, other: Collider, side: Side, contact: CollisionContact): void {
+
+        if (self.owner instanceof Weapon && other.owner instanceof Enemy) {
+            console.log('Weapon hit enemy');
+            const weaponAttackDIR = this.currentAttackDirection;
+            other.owner.setVelocity(weaponAttackDIR.x * 500, weaponAttackDIR.y * 500);
+            other.owner.takeDamage(25);
+        }
+
     }
 
     onInitialize(engine: Engine) {

@@ -55,29 +55,18 @@ export class Enemy extends Actor {
             }
         }
 
-        if (self.owner instanceof Enemy && other.owner instanceof Weapon) {
-            console.log('Enemy hit by weapon');
-            const weaponAttackDIR = other.owner.currentAttackDirection;
-            self.owner.setVelocity(weaponAttackDIR.x * 500, weaponAttackDIR.y * 500);
-            self.owner.health -= 25;
-            if (self.owner.health <= 0) {
-                self.owner.kill()
-            }
-        }
-
-    }
-
-    scheduleRemove() {
-        this.body.collisionType = CollisionType.PreventCollision
-        this.engineRef?.clock.schedule(() => {
-            console.log('Enemy removed after collision with player');
-            this.kill();
-        }, 3000);
     }
 
     setVelocity(x: number, y: number) {
         this.vel.x = x;
         this.vel.y = y;
+    }
+
+    takeDamage(amount: number) {
+        this.health -= amount;
+        if (this.health <= 0) {
+            this.kill();
+        }
     }
 
     onPostUpdate(engine: Engine, delta: number): void {

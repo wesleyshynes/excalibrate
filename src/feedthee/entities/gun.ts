@@ -94,21 +94,10 @@ export class Gun extends Actor {
 
         bulletToShoot.shootBullet(
             { x: this._owner.pos.x + bulletX, y: this._owner.pos.y + bulletY },
-            { x: this.currentAttackDirection.x * this.bulletSpeed, y: this.currentAttackDirection.y * this.bulletSpeed },
+            { x: this.currentAttackDirection.x, y: this.currentAttackDirection.y},
             bulletRotation
         )
         this.engineRef.currentScene.add(bulletToShoot);
-
-        // this.bullet.pos = vec(
-        //     this._owner.pos.x + bulletX, 
-        //     this._owner.pos.y + bulletY
-        // );
-        // if (this.bullet.rotation !== bulletRotation) {
-        //     this.bullet.actions.rotateTo(bulletRotation, 100, RotationType.ShortestPath);
-        // }
-        // this.engineRef.currentScene.add(this.bullet);
-        // this.bullet.vel.x = this.currentAttackDirection.x * this.bulletSpeed;
-        // this.bullet.vel.y = this.currentAttackDirection.y * this.bulletSpeed;
 
         // Schedule to reset gunActive after 500 milliseconds
         if (this.initialized && this.engineRef) {
