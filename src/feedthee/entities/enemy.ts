@@ -1,7 +1,5 @@
 import { Actor, Animation, AnimationStrategy, Collider, CollisionContact, CollisionType, Color, Engine, Side, SpriteSheet, vec } from "excalibur";
 import { Player } from "./player";
-import { gameData } from "../game-data";
-import { Weapon } from "./weapon";
 import { Resources } from "../resources";
 import { EnemySensor } from "./enemySensor";
 
@@ -19,6 +17,10 @@ export class Enemy extends Actor {
 
     followTarget: Player | null = null;
     followRange: number = 300; // Distance within which the enemy will start following the player
+
+    idleSprite: SpriteSheet | undefined;
+    runSprite: SpriteSheet | undefined
+    walkSprite: SpriteSheet | undefined;
 
     constructor(name: string = 'enemy', options?: {
         pos?: { x: number, y: number },
@@ -51,7 +53,8 @@ export class Enemy extends Actor {
             self.owner.setVelocity(playerLastSpeed.x, playerLastSpeed.y);
             if (other.owner.updatePlayerLabel) {
                 other.owner.updatePlayerLabel('Ouch!');
-                gameData.updateHealth(-10);
+                // gameData.updateHealth(-10);
+                other.owner.takeDamage(10);
             }
         }
 
@@ -64,6 +67,43 @@ export class Enemy extends Actor {
 
     takeDamage(amount: number) {
         this.health -= amount;
+
+        const redTint = Color.fromHex('#FF000050');
+
+        if (this.idleSprite) {
+            this.idleSprite.sprites.forEach(sprite => {
+                sprite.tint = redTint;
+            });
+        }
+        if (this.runSprite) {
+            this.runSprite.sprites.forEach(sprite => {
+                sprite.tint = redTint;
+            });
+        }
+        if (this.walkSprite) {
+            this.walkSprite.sprites.forEach(sprite => {
+                sprite.tint = redTint;
+            });
+        }
+
+        setTimeout(() => {
+            if (this.idleSprite) {
+                this.idleSprite.sprites.forEach(sprite => {
+                    sprite.tint = Color.White;
+                });
+            }
+            if (this.runSprite) {
+                this.runSprite.sprites.forEach(sprite => {
+                    sprite.tint = Color.White;
+                });
+            }
+            if (this.walkSprite) {
+                this.walkSprite.sprites.forEach(sprite => {
+                    sprite.tint = Color.White;
+                });
+            }
+        }, 200);
+
         if (this.health <= 0) {
             this.kill();
         }
@@ -158,7 +198,7 @@ export class Enemy extends Actor {
     setupGraphics() {
         const animationSpeed = 60
 
-        const idleSprite = SpriteSheet.fromImageSource({
+        this.idleSprite = SpriteSheet.fromImageSource({
             image: Resources.SlimeIdle,
             grid: {
                 rows: 4,
@@ -168,25 +208,25 @@ export class Enemy extends Actor {
             },
         })
         const idleAnimationDown = Animation.fromSpriteSheet(
-            idleSprite,
+            this.idleSprite,
             [0, 1, 2, 3, 4, 5], // All frames in order
             animationSpeed, // Frame duration in milliseconds
             AnimationStrategy.Loop
         );
         const idleAnimationRight = Animation.fromSpriteSheet(
-            idleSprite,
+            this.idleSprite,
             [6, 7, 8, 9, 10, 11], // All frames in order
             animationSpeed, // Frame duration in milliseconds
             AnimationStrategy.Loop
         );
         const idleAnimationLeft = Animation.fromSpriteSheet(
-            idleSprite,
+            this.idleSprite,
             [12, 13, 14, 15, 16, 17], // All frames in order
             animationSpeed, // Frame duration in milliseconds
             AnimationStrategy.Loop
         );
         const idleAnimationUp = Animation.fromSpriteSheet(
-            idleSprite,
+            this.idleSprite,
             [18, 19, 20, 21, 22, 23], // All frames in order
             animationSpeed, // Frame duration in milliseconds
             AnimationStrategy.Loop
@@ -204,7 +244,7 @@ export class Enemy extends Actor {
         idleAnimationRight.reset();
         idleAnimationUp.reset();
 
-        const runSprite = SpriteSheet.fromImageSource({
+        this.runSprite = SpriteSheet.fromImageSource({
             image: Resources.SlimeRun,
             grid: {
                 rows: 4,
@@ -215,25 +255,25 @@ export class Enemy extends Actor {
         })
 
         const runAnimationDown = Animation.fromSpriteSheet(
-            runSprite,
+            this.runSprite,
             [0, 1, 2, 3, 4, 5, 6, 7], // All frames in order
             animationSpeed, // Frame duration in milliseconds
             AnimationStrategy.Loop
         );
         const runAnimationUp = Animation.fromSpriteSheet(
-            runSprite,
+            this.runSprite,
             [8, 9, 10, 11, 12, 13, 14, 15], // All frames in order
             animationSpeed, // Frame duration in milliseconds
             AnimationStrategy.Loop
         );
         const runAnimationLeft = Animation.fromSpriteSheet(
-            runSprite,
+            this.runSprite,
             [16, 17, 18, 19, 20, 21, 22, 23], // All frames in order
             animationSpeed, // Frame duration in milliseconds
             AnimationStrategy.Loop
         );
         const runAnimationRight = Animation.fromSpriteSheet(
-            runSprite,
+            this.runSprite,
             [24, 25, 26, 27, 28, 29, 30, 31], // All frames in order
             animationSpeed, // Frame duration in milliseconds
             AnimationStrategy.Loop
@@ -249,7 +289,7 @@ export class Enemy extends Actor {
         runAnimationRight.reset();
         runAnimationUp.reset();
 
-        const walkSpriteSheet = SpriteSheet.fromImageSource({
+        this.walkSprite = SpriteSheet.fromImageSource({
             image: Resources.SlimeWalk,
             grid: {
                 rows: 4,
@@ -260,25 +300,25 @@ export class Enemy extends Actor {
         })
 
         const walkAnimationDown = Animation.fromSpriteSheet(
-            walkSpriteSheet,
+            this.walkSprite,
             [0, 1, 2, 3, 4, 5, 6, 7], // All frames in order
             animationSpeed, // Frame duration in milliseconds
             AnimationStrategy.Loop
         );
         const walkAnimationUp = Animation.fromSpriteSheet(
-            walkSpriteSheet,
+            this.walkSprite,
             [8, 9, 10, 11, 12, 13, 14, 15], // All frames in order
             animationSpeed, // Frame duration in milliseconds
             AnimationStrategy.Loop
         );
         const walkAnimationLeft = Animation.fromSpriteSheet(
-            walkSpriteSheet,
+            this.walkSprite,
             [16, 17, 18, 19, 20, 21, 22, 23], // All frames in order
             animationSpeed, // Frame duration in milliseconds
             AnimationStrategy.Loop
         );
         const walkAnimationRight = Animation.fromSpriteSheet(
-            walkSpriteSheet,
+            this.walkSprite,
             [24, 25, 26, 27, 28, 29, 30, 31], // All frames in order
             animationSpeed, // Frame duration in milliseconds
             AnimationStrategy.Loop

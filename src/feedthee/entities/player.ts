@@ -33,6 +33,10 @@ export class Player extends Actor {
     weapon: Weapon | undefined;
     gun: Gun | undefined;
 
+    idleSprite: SpriteSheet | undefined;
+    walkSprite: SpriteSheet | undefined;
+    runSprite: SpriteSheet | undefined;
+
     constructor(name: string = 'player') {
         super({
             pos: vec(100, 100), // Starting position of the player
@@ -86,6 +90,48 @@ export class Player extends Actor {
                 }
             }, 60);
         }
+    }
+
+    takeDamage(amount: number) {
+
+        const redTint = Color.fromHex('#FF000050');
+
+        if (this.idleSprite) {
+            this.idleSprite.sprites.forEach(sprite => {
+                sprite.tint = redTint;
+            });
+        }
+        if (this.runSprite) {
+            this.runSprite.sprites.forEach(sprite => {
+                sprite.tint = redTint;
+            });
+        }
+        if (this.walkSprite) {
+            this.walkSprite.sprites.forEach(sprite => {
+                sprite.tint = redTint;
+            });
+        }
+
+        setTimeout(() => {
+            if (this.idleSprite) {
+                this.idleSprite.sprites.forEach(sprite => {
+                    sprite.tint = Color.White;
+                });
+            }
+            if (this.runSprite) {
+                this.runSprite.sprites.forEach(sprite => {
+                    sprite.tint = Color.White;
+                });
+            }
+            if (this.walkSprite) {
+                this.walkSprite.sprites.forEach(sprite => {
+                    sprite.tint = Color.White;
+                });
+            }
+        }, 200);
+
+        gameData.updateHealth(-10);
+        
     }
 
     onCollisionStart(self: Collider, other: Collider, side: Side, contact: CollisionContact): void {
@@ -243,7 +289,7 @@ export class Player extends Actor {
         const animationSpeed = 60
 
         // IDLE ANIMATIONS
-        const idleSpriteSheet = SpriteSheet.fromImageSource({
+        this.idleSprite = SpriteSheet.fromImageSource({
             image: Resources.PlayerIdle,
             grid: {
                 rows: 5,
@@ -255,7 +301,7 @@ export class Player extends Actor {
         });
 
         const idleAnimationDown = Animation.fromSpriteSheet(
-            idleSpriteSheet,
+            this.idleSprite,
             [0, 1, 2, 3], // All frames in order
             animationSpeed // Frame duration in milliseconds
         );
@@ -263,7 +309,7 @@ export class Player extends Actor {
         this.graphics.use('idle-down');
 
         const idleAnimationRightDown = Animation.fromSpriteSheet(
-            idleSpriteSheet,
+            this.idleSprite,
             [4, 5, 6, 7], // All frames in order
             animationSpeed // Frame duration in milliseconds
         );
@@ -271,7 +317,7 @@ export class Player extends Actor {
         this.graphics.add('idle-left-down', idleAnimationRightDown); // Use the same animation for left, will flip horizontally
 
         const idleAnimationRight = Animation.fromSpriteSheet(
-            idleSpriteSheet,
+            this.idleSprite,
             [8, 9, 10, 11], // All frames in order
             animationSpeed // Frame duration in milliseconds
         );
@@ -279,7 +325,7 @@ export class Player extends Actor {
         this.graphics.add('idle-left', idleAnimationRight); // Use the same animation for left, will flip horizontally
 
         const idleAnimationRightUp = Animation.fromSpriteSheet(
-            idleSpriteSheet,
+            this.idleSprite,
             [12, 13, 14, 15], // All frames in order
             animationSpeed // Frame duration in milliseconds
         );
@@ -287,14 +333,14 @@ export class Player extends Actor {
         this.graphics.add('idle-left-up', idleAnimationRightUp); // Use the same animation for left, will flip horizontally
 
         const idleAnimationUp = Animation.fromSpriteSheet(
-            idleSpriteSheet,
+            this.idleSprite,
             [16, 17, 18, 19], // All frames in order
             animationSpeed // Frame duration in milliseconds
         );
         this.graphics.add('idle-up', idleAnimationUp);
 
         // WALK ANIMATIONS
-        const walkSpriteSheet = SpriteSheet.fromImageSource({
+        this.walkSprite = SpriteSheet.fromImageSource({
             image: Resources.PlayerWalk,
             grid: {
                 rows: 5,
@@ -305,14 +351,14 @@ export class Player extends Actor {
 
         });
         const walkAnimationDown = Animation.fromSpriteSheet(
-            walkSpriteSheet,
+            this.walkSprite,
             [0, 1, 2, 3], // All frames in order
             animationSpeed // Frame duration in milliseconds
         );
         this.graphics.add('walk-down', walkAnimationDown);
 
         const walkAnimationRightDown = Animation.fromSpriteSheet(
-            walkSpriteSheet,
+            this.walkSprite,
             [4, 5, 6, 7], // All frames in order
             animationSpeed // Frame duration in milliseconds
         );
@@ -320,7 +366,7 @@ export class Player extends Actor {
         this.graphics.add('walk-left-down', walkAnimationRightDown); // Use the same animation for left, will flip horizontally
 
         const walkAnimationRight = Animation.fromSpriteSheet(
-            walkSpriteSheet,
+            this.walkSprite,
             [8, 9, 10, 11], // All frames in order
             animationSpeed // Frame duration in milliseconds
         );
@@ -328,7 +374,7 @@ export class Player extends Actor {
         this.graphics.add('walk-left', walkAnimationRight); // Use the same animation for left, will flip horizontally
 
         const walkAnimationRightUp = Animation.fromSpriteSheet(
-            walkSpriteSheet,
+            this.walkSprite,
             [12, 13, 14, 15], // All frames in order
             animationSpeed // Frame duration in milliseconds
         );
@@ -336,14 +382,14 @@ export class Player extends Actor {
         this.graphics.add('walk-left-up', walkAnimationRightUp); // Use the same animation for left, will flip horizontally
 
         const walkAnimationUp = Animation.fromSpriteSheet(
-            walkSpriteSheet,
+            this.walkSprite,
             [16, 17, 18, 19], // All frames in order
             animationSpeed // Frame duration in milliseconds
         );
         this.graphics.add('walk-up', walkAnimationUp);
 
         // RUN ANIMATIONS
-        const runSpriteSheet = SpriteSheet.fromImageSource({
+        this.runSprite = SpriteSheet.fromImageSource({
             image: Resources.PlayerRun,
             grid: {
                 rows: 5,
@@ -353,14 +399,14 @@ export class Player extends Actor {
             },
         });
         const runAnimationDown = Animation.fromSpriteSheet(
-            runSpriteSheet,
+            this.runSprite,
             [0, 1, 2, 3, 4, 5], // All frames in order
             animationSpeed // Frame duration in milliseconds
         );
         this.graphics.add('run-down', runAnimationDown);
 
         const runAnimationRightDown = Animation.fromSpriteSheet(
-            runSpriteSheet,
+            this.runSprite,
             [6, 7, 8, 9, 10, 11], // All frames in order
             animationSpeed // Frame duration in milliseconds
         );
@@ -368,7 +414,7 @@ export class Player extends Actor {
         this.graphics.add('run-left-down', runAnimationRightDown); // Use the same animation for left, will flip horizontally
 
         const runAnimationRight = Animation.fromSpriteSheet(
-            runSpriteSheet,
+            this.runSprite,
             [12, 13, 14, 15, 16, 17], // All frames in order
             animationSpeed // Frame duration in milliseconds
         );
@@ -376,7 +422,7 @@ export class Player extends Actor {
         this.graphics.add('run-left', runAnimationRight); // Use the same animation for left, will flip horizontally
 
         const runAnimationRightUp = Animation.fromSpriteSheet(
-            runSpriteSheet,
+            this.runSprite,
             [18, 19, 20, 21, 22, 23], // All frames in order
             animationSpeed // Frame duration in milliseconds
         );
@@ -384,7 +430,7 @@ export class Player extends Actor {
         this.graphics.add('run-left-up', runAnimationRightUp); // Use the same animation for left, will flip horizontally
 
         const runAnimationUp = Animation.fromSpriteSheet(
-            runSpriteSheet,
+            this.runSprite,
             [24, 25, 26, 27, 28, 29], // All frames in order
             animationSpeed // Frame duration in milliseconds
         );
