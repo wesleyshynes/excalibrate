@@ -4,6 +4,8 @@ class GameData {
 
     farts: boolean = true
 
+    lastGameStart: number = Date.now()
+
     updateScore(amount: number) {
         this.score += amount;
     }
@@ -15,6 +17,12 @@ class GameData {
         } else if (this.health > 100) {
             this.health = 100;
         }
+    }
+
+    reset() {
+        this.score = 0;
+        this.health = 100;
+        this.lastGameStart = Date.now();
     }
 }
 

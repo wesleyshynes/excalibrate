@@ -109,6 +109,10 @@ export class Enemy extends Actor {
         }
     }
 
+    reset() {
+        this.health = 100;
+    }
+
     onPostUpdate(engine: Engine, delta: number): void {
         let maxVelocity = 100;
 

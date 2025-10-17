@@ -1,19 +1,4 @@
-import {
-    Actor,
-    Animation,
-    Collider,
-    CollisionContact,
-    CollisionType,
-    Color,
-    Engine,
-    Font,
-    Keys,
-    Label,
-    Side,
-    SpriteSheet,
-    TextAlign,
-    vec,
-} from "excalibur";
+import { Actor, Animation, Collider, CollisionContact, CollisionType, Color, Engine, Font, Keys, Label, Side, SpriteSheet, TextAlign, vec, } from "excalibur";
 import { Resources } from "../resources";
 import { Weapon } from "./weapon";
 import { gameData } from "../game-data";
@@ -131,7 +116,7 @@ export class Player extends Actor {
         }, 200);
 
         gameData.updateHealth(-10);
-        
+
     }
 
     onCollisionStart(self: Collider, other: Collider, side: Side, contact: CollisionContact): void {
@@ -147,8 +132,7 @@ export class Player extends Actor {
         // if player health is 0 do not allow movement
         if (gameData.health <= 0) {
             engine.goToScene('TitleScreen');
-            gameData.health = 100;
-            gameData.score = 0;
+            gameData.reset();
             return;
         }
 

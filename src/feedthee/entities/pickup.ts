@@ -1,17 +1,4 @@
-import {
-    Actor,
-    Animation,
-    AnimationStrategy,
-    Collider,
-    CollisionContact,
-    CollisionType,
-    Color,
-    Engine,
-    Side,
-    Sprite,
-    SpriteSheet,
-    vec
-} from "excalibur";
+import { Actor, Animation, AnimationStrategy, Collider, CollisionContact, CollisionType, Color, Engine, Side, Sprite, SpriteSheet, vec } from "excalibur";
 import { Player } from "./player";
 import { gameData } from "../game-data";
 import { Resources } from "../resources";
@@ -21,6 +8,8 @@ export class PickUp extends Actor {
 
     startSprite!: Sprite;
     spinAnimation!: Animation;
+
+    collected: boolean = false;
 
     constructor(name: string = 'pickup', options?: {
         pos?: { x: number, y: number },
@@ -73,6 +62,7 @@ export class PickUp extends Actor {
                 other.owner.updatePlayerLabel('Picked Up!');
             }
             self.owner.setVelocity(0, -1200);
+            self.owner.collected = true;
             this.scheduleRemove();
             gameData.updateScore(10);
         }

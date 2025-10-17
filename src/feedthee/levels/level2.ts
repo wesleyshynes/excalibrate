@@ -4,6 +4,7 @@ import { Wall } from "../entities/wall";
 import { Enemy } from "../entities/enemy";
 import { Door } from "../entities/door";
 import { PlayerHUD } from "../player-hud";
+import { gameData } from "../game-data";
 
 const gameWidth = 800;
 const gameHeight = 600;
@@ -21,9 +22,13 @@ export class Level2 extends Scene {
         new Wall(gameWidth - 10, gameHeight / 2, 20, gameHeight) // Right wall
     ]
 
-    enemy = new Enemy('enemy1')
+    enemy = new Enemy('enemy1', {
+        pos: { x: 600, y: 300 }
+    })
 
     exitDoor = new Door(50, gameHeight / 2, 40, 80, Color.Black, 'Level')
+
+    activationTime: number = 0;
 
 
     onInitialize(engine: Engine): void {
@@ -34,11 +39,17 @@ export class Level2 extends Scene {
         this.add(this.playerHUD);
         engine.currentScene.camera.strategy.lockToActor(this.player);
 
+        this.activationTime = Date.now();
     }
 
     onActivate(context: SceneActivationContext<any>): void {
+        if (this.activationTime <= gameData.lastGameStart + 100) {
+            this.enemy.reset();
+            this.enemy.pos = vec(600, 300);
+            this.add(this.enemy);
+        }
         // Reset player position when the level is activated
-        this.player.vel = vec(0,0);
+        this.player.vel = vec(0, 0);
         this.player.pos = vec(
             this.exitDoor.pos.x + 60,
             gameHeight / 2);

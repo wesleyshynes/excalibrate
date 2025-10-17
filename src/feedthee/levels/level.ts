@@ -5,6 +5,7 @@ import { Door } from "../entities/door";
 import { PickUp } from "../entities/pickup";
 import { PlayerHUD } from "../player-hud";
 import { Resources } from "../resources";
+import { gameData } from "../game-data";
 
 export class Level extends Scene {
 
@@ -14,11 +15,14 @@ export class Level extends Scene {
 
     startingX = 100;
     firstActivation: boolean = false;
+    activationTime: number = 0;
 
-    enemy = new Enemy('enemy1')
+    enemy = new Enemy('enemy1', {
+        pos: { x: 600, y: 300 }
+    })
 
     pickup = new PickUp('pickup1', {
-        pos: { x: 400, y: 300  },
+        pos: { x: 400, y: 300 },
     })
 
     exitDoor = new Door(750, 300, 40, 80, Color.Black, 'Level2')
@@ -28,21 +32,34 @@ export class Level extends Scene {
         this.setupTileMap();
         this.add(this.player);
         this.add(this.enemy);
+        this.add(this.enemy);
         this.add(this.exitDoor);
         this.add(this.pickup);
         this.add(this.playerHUD);
         engine.currentScene.camera.strategy.lockToActor(this.player);
 
+        this.firstActivation = true;
     }
 
     onActivate(context: SceneActivationContext<any>): void {
+        if (this.activationTime <= gameData.lastGameStart + 100) {
+            this.firstActivation = false;
+            if (this.pickup.collected) {
+                this.pickup.collected = false;
+                this.add(this.pickup);
+            }
+            this.enemy.reset();
+            this.enemy.pos = vec(600, 300);
+            this.add(this.enemy);
+        }
         // Reset player position when the level is activated
-        this.player.vel = vec(0,0);
+        this.player.vel = vec(0, 0);
         this.player.pos = vec(
-            this.firstActivation ? this.exitDoor.pos.x - 60 : this.startingX, 
+            this.firstActivation ? this.exitDoor.pos.x - 60 : this.startingX,
             this.firstActivation ? this.exitDoor.pos.y : 300
         );
         this.firstActivation = true;
+        this.activationTime = Date.now();
     }
 
 
@@ -94,17 +111,17 @@ export class Level extends Scene {
                 spriteX = 6
                 spriteY = 1
                 tile.solid = true
-            }            
+            }
             if (tilePosX >= levelLength - 1) {
                 spriteX = 6
                 spriteY = 1
                 tile.solid = true
-            }            
+            }
             if (tilePosY <= 0) {
                 spriteY = 1
                 spriteX = 6
                 tile.solid = true
-            }            
+            }
             if (tilePosY >= levelHeight - 1) {
                 spriteY = 1
                 spriteX = 6
